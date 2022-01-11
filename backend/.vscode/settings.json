@@ -1,0 +1,9 @@
+{
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode", // 파일을 포맷터를 지정
+        "editor.codeActionsOnSave": {
+            "source.fixAll": true, // 소스를 저장 할 때 설정에 맞게 포맷팅
+            "source.organizeImports": true // 소스 저장시 import를 정리
+        }
+    }
+}
