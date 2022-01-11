@@ -21,7 +21,6 @@
     /* Type Checking */
     "strict": true /* Enable all strict type-checking options. */,
     /* Completeness */
-
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
   "exclude": ["node_modules"],
