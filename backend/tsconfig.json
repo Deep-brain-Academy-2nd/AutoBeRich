@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+
+    /* Projects */
+
+    /* Language and Environment */
+    "target": "es2016", // target의 js 버젼
+
+    /* Modules */
+    "module": "commonjs" /* 모듈 코드 생성 지정 */,
+    "moduleResolution": "node" /* 모듈 해석 방법 */,
+    /* Emit */
+    "sourceMap": true /* 소스맵 사용 */,
+    "outDir": "dist" /* 결과물 디렉토리 */,
+
+    /* Interop Constraints */
+    "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. */,
+    "forceConsistentCasingInFileNames": true /* Ensure that casing is correct in imports. */,
+
+    /* Type Checking */
+    "strict": true /* Enable all strict type-checking options. */,
+    /* Completeness */
+
+    "skipLibCheck": true /* Skip type checking all .d.ts files. */
+  },
+  "exclude": ["node_modules"],
+  "include": ["src"]
+}
