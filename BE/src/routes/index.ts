@@ -1,7 +1,8 @@
 import express, { Request, Response } from 'express';
+import userRouter from "./user-router";
 const axios = require('axios');
 const { v4: uuidv4 } = require('uuid');
-const sign = require('jsonwebtoken').sign;
+/*const sign = require('jsonwebtoken').sign;*/
 
 // 분리 필요
 
@@ -16,8 +17,8 @@ const payload = {
   nonce: uuidv4(),
 };
 
-const token = sign(payload, secret_key);
-const authorizationToken = `Bearer ${token}`;
+/*const token = sign(payload, secret_key);*/
+/*const authorizationToken = `Bearer ${token}`;*/
 
 const getMarketAll = () => {
   const options = {
@@ -55,7 +56,7 @@ const getCoinInfos = (name: string) => {
     });
 };
 
-const getMyAccountInfos = () => {
+/*const getMyAccountInfos = () => {
   const options = {
     method: 'GET',
     url: 'https://api.upbit.com/v1/accounts',
@@ -70,11 +71,13 @@ const getMyAccountInfos = () => {
     .catch(function (error: Error) {
       console.error(error);
     });
-};
+};*/
 
-router.get('/', (req, res) => {
+/*router.get('/', (req, res) => {
   getMyAccountInfos();
   res.send('');
-});
+});*/
+
+router.use('/users', userRouter);
 
 export default router;
