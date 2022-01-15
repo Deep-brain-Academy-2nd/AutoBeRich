@@ -5,9 +5,9 @@ export class ETException extends HttpException {
     statusCode: number;
     message: string;
     constructor(statusCode: number, message?: string) {
-        super(message, statusCode);
+        super(message || "", statusCode);
         this.statusCode = statusCode;
-        this.message = message;
+        this.message = message || "";
     }
 }
 
