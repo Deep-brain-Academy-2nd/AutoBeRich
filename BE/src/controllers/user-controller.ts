@@ -1,9 +1,9 @@
 import express, { NextFunction, Request, Response } from "express";
-import bcrypt from "bcryptjs";
+import bcrypt, {compare} from "bcryptjs";
 import jwt from "jsonwebtoken";
-import errorGenerator from "../errors/errorGenerator";
+import errorGenerator from "../errors/error-generator";
 import { check, validationResult } from "express-validator";
-import { IUserInputDTO } from "../interfaces/IUser";
+import {IUser, IUserInputDTO, userUniqueSearchInput} from "../interfaces/IUser";
 import { UserService } from "../services";
 import properties from "../config/properties/properties";
 
@@ -26,26 +26,54 @@ const signUp = async (req: Request, res: Response, next: NextFunction) => {
 
         const createdUser = await UserService.createUser({ name, email, password: hashedPassword });
 
-        const payload = {
-            user: {
-                email: createdUser.email,
-            },
-        };
-        jwt.sign(
-            payload,
-            properties.jwtSecret,
-            { expiresIn: 36000 },
-            (err, token) => {
-                if(err) throw err;
-                res.json({ token });
-            }
-        );
     } catch (err) {
         next(err);
     }
 };
 
+const logIn = async  (req: Request, res: Response, next: NextFunction) => {
+
+    try{
+        let email: userUniqueSearchInput = req.body.email;
+        let password: string = req.body.password;
+
+        const user: IUser | null = await UserService.findEmail(email);
+        if(!user) {
+            //해당 이메일 주소 없음.
+            res.status(400).send('email not exist');
+            return;
+        }
+
+        const result = await compare(password, user.password);
+        if(!result) {
+            //비밀번호 불일치.
+            res.status(400).send('password incorrect');
+            return;
+        }
+
+        //유저 정보를 가지고 토큰을 만들어낸다.
+        jwt.sign(
+            {
+                email: email
+            },
+            properties.jwtSecret,
+            { expiresIn: 36000 },
+            (err, token) => {
+                if(err) throw err;
+                res.json({
+                    name: user.name,
+                    token: token,
+                });
+            }
+        );
+
+    }catch(err) {
+        res.status(400).send('login error');
+    }
+
+};
+
 export default {
     signUp,
-    //logIn
+    logIn,
 }
