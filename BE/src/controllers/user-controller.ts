@@ -40,14 +40,16 @@ const logIn = async  (req: Request, res: Response, next: NextFunction) => {
         const user: IUser | null = await UserService.findEmail(email);
         if(!user) {
             //해당 이메일 주소 없음.
-            res.status(400).send('email not exist');
+            //res.status(400).send('email not exist');
+            errorGenerator({msg:'email not exist', statusCode:400});
             return;
         }
 
         const result = await compare(password, user.password);
         if(!result) {
             //비밀번호 불일치.
-            res.status(400).send('password incorrect');
+            //res.status(400).send('password incorrect');
+            errorGenerator({msg: 'password incorrect', statusCode: 400});
             return;
         }
 
@@ -73,7 +75,46 @@ const logIn = async  (req: Request, res: Response, next: NextFunction) => {
 
 };
 
+const verifyToken = (req: Request, res: Response, next: NextFunction) => {
+    try {
+        if(!req.headers['x-access-token']) {
+            return res.status(403).json({
+                success: false,
+                message: 'not logged in'
+            })
+        }
+
+        const token: string = req.headers['x-access-token'].toString();
+        const secret_key = process.env.SECRET_KEY || 'secret_key';
+
+        // token does not exist
+        if(!token) {
+            return res.status(403).json({
+                success: false,
+                message: 'not logged in'
+            })
+        }
+
+        //토큰을 검증한다.
+        const decoded: any = jwt.verify(token, secret_key);
+
+        if (decoded) {
+            res.locals = {
+                ...res.locals,
+                email: decoded.email,
+            }
+            next();
+        } else {
+            //res.status(401).json({ error: 'unauthorized' });
+            errorGenerator( { msg:'unauthorized', statusCode:401 })
+        }
+    } catch (err) {
+        res.status(401).json({ error: 'token expired' });
+    }
+};
+
 export default {
     signUp,
     logIn,
+    verifyToken,
 }
