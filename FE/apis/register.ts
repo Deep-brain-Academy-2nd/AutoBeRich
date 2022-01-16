@@ -5,7 +5,7 @@ const registerAPI = {
     const port = process.env.REACT_APP_API_URL;
     console.log(port, obj, API, 'api');
     axios
-      .post('http://172.34.21.34:5000/users/signup', {
+      .post('http://localhost:5000/users/signup', {
         obj,
       })
       .then((res) => {

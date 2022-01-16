@@ -1,8 +1,8 @@
 import API from '.';
-
+import axios from 'axios'
 const loginAPI = {
   login: async (obj: any) => {
-    await API.post('users/login', {
+    await axios.post('http://localhost:5000/users/login', {
       obj,
     })
       .then((res) => {
