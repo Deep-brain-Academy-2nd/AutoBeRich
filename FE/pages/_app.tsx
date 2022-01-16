@@ -26,5 +26,5 @@ MyApp.getInitialProps = async (appContext: AppContext) => {
   const appProps = await App.getInitialProps(appContext);
   return { ...appProps };
 };
-
+// app에 바인딩
 export default wrapper.withRedux(MyApp);

@@ -11,8 +11,8 @@ export const HomePage = () => {
           AutoBeRich!
         </a>
       </h1>
-      <Link href="/test">
-        <a>Reducer Test 페이지 이동</a>
+      <Link href="/login">
+        <a>로그인하기</a>
       </Link>
     </>
   );
