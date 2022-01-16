@@ -4,6 +4,8 @@
         "editor.codeActionsOnSave": {
             "source.fixAll": true, // 소스를 저장 할 때 설정에 맞게 포맷팅
             "source.organizeImports": true // 소스 저장시 import를 정리
-        }
+        },
+        "editor.formatOnType": true,
+        "editor.formatOnSave": true
     }
 }

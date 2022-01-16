@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
-import userRouter from "./user-router";
-import properties from "../config/properties/properties";
+import userRouter from './user-router';
+import properties from '../config/properties/properties';
 const axios = require('axios');
 const { v4: uuidv4 } = require('uuid');
 /*const sign = require('jsonwebtoken').sign;*/
@@ -33,7 +33,7 @@ const getMarketAll = () => {
   axios
     .request(options)
     .then(function (response: Response) {
-       //console.log(response.data);
+      //console.log(response.data);
     })
     .catch(function (error: Error) {
       console.error(error);
