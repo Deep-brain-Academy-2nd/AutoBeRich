@@ -4,6 +4,7 @@ import path from 'path';
 import indexRouter from './routes/index';
 import connectDB from './loaders/mongo-connector';
 import properties from './config/properties/properties';
+import cors from 'cors';
 
 connectDB();
 //require('dotenv').config();
@@ -16,6 +17,7 @@ app.use(morgan('dev'));
 app.use('/', express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cors({ origin: 'http://localhost:3000' }));
 
 app.use('/', indexRouter);
 

@@ -12,6 +12,7 @@ const RegisterContainer = () => {
       accessKey: e.currentTarget.access_key.value,
       secretKey: e.currentTarget.secret_key.value,
     };
+
     const result = await registerAPI.register(body);
     console.log(result, 'Container');
     return result;

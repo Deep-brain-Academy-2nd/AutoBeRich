@@ -2,7 +2,7 @@ import API from '.';
 
 const loginAPI = {
   login: async (obj: any) => {
-    await API.post('/login', {
+    await API.post('users/login', {
       obj,
     })
       .then((res) => {
