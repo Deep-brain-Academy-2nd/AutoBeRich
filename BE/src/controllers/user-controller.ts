@@ -33,10 +33,9 @@ const signUp = async (req: Request, res: Response, next: NextFunction) => {
 
 const logIn = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    let email: userUniqueSearchInput = req.body.obj.email;
-    let password: string = req.body.obj.password;
+    const { email, password } = req.body.obj;
 
-    const user: IUser | null = await UserService.findEmail(email);
+    const user: IUser | null = await UserService.findEmail({ email });
 
     if (!user) {
       //해당 이메일 주소 없음.
@@ -63,7 +62,6 @@ const logIn = async (req: Request, res: Response, next: NextFunction) => {
       (err, token) => {
         if (err) throw err;
         res.json({
-          name: user.name,
           token: token,
         });
       }
@@ -97,10 +95,10 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     const decoded: any = jwt.verify(token, secret_key);
 
     if (decoded) {
-      res.locals = {
+      /*res.locals = {
         ...res.locals,
         email: decoded.email,
-      };
+      };*/
       next();
     } else {
       //res.status(401).json({ error: 'unauthorized' });
