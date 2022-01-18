@@ -35,6 +35,7 @@ function LoginPresenter({ handleSubmit }) {
           <form onSubmit={handleSubmit}>
             {errorMsg ? <p style={{ color: 'red' }}>{errorMsg}</p> : null}
             <div className="form-floating mb-2">
+              <label htmlFor="email">이메일 주소</label>
               <input
                 id="email"
                 name="email"
@@ -42,9 +43,9 @@ function LoginPresenter({ handleSubmit }) {
                 className="form-control"
                 placeholder="이메일 주소"
               />
-              <label htmlFor="email">이메일 주소</label>
             </div>
             <div className="form-floating mb-2">
+              <label htmlFor="password">비밀번호</label>
               <input
                 id="password"
                 name="password"
@@ -52,20 +53,11 @@ function LoginPresenter({ handleSubmit }) {
                 className="form-control"
                 placeholder="비밀번호"
               />
-              <label htmlFor="password">비밀번호</label>
             </div>
             <button className="w-100 btn btn-lg btn-primary mb-2" type="submit">
               로그인
             </button>
           </form>
-
-          <button
-            type="button"
-            className="w-100 btn btn-lg btn-secondary px-4 gap-3"
-            onClick={() => router.replace('/')}
-          >
-            홈으로
-          </button>
           <Link href="/register">가입하기</Link>
           <Link href="/forget-password">
             <a>Forget password</a>
