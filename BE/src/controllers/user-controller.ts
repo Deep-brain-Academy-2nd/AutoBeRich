@@ -2,19 +2,17 @@ import express, { NextFunction, Request, Response } from 'express';
 import bcrypt, { compare } from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import errorGenerator from '../errors/error-generator';
-import { check, validationResult } from 'express-validator';
-import { IUser, IUserInputDTO, userUniqueSearchInput } from '../interfaces/IUser';
+import { body, validationResult } from 'express-validator';
+import { IUser, IUserInputDTO } from '../interfaces/IUser';
 import { UserService } from '../services';
 import properties from '../config/properties/properties';
+import AES from 'crypto-js/aes';
 
 const signUp = async (req: Request, res: Response, next: NextFunction) => {
-  check('name', 'Name is required').not().isEmpty();
-  check('email', 'Please include a valid email').isEmail();
-  check('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 });
-  const { name, email, password }: IUserInputDTO = req.body.obj;
+  const { name, email, password, secretKey, accessKey }: IUserInputDTO = req.body;
 
   try {
-    const errors = validationResult(req.body);
+    const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
@@ -25,7 +23,21 @@ const signUp = async (req: Request, res: Response, next: NextFunction) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const createdUser = await UserService.createUser({ name, email, password: hashedPassword });
+    const key = properties.key;
+
+    const encryptedSecretKey = AES.encrypt(secretKey, key).toString();
+    const encryptedAccessKey = AES.encrypt(accessKey, key).toString();
+
+    //복호환
+    //var decryptedData = JSON.parse(encryptedSecretKey.toString(CryptoJS.enc.Utf8));
+
+    const createdUser = await UserService.createUser({
+      name,
+      email,
+      password: hashedPassword,
+      accessKey: encryptedAccessKey,
+      secretKey: encryptedSecretKey,
+    });
   } catch (err) {
     next(err);
   }
@@ -67,7 +79,7 @@ const logIn = async (req: Request, res: Response, next: NextFunction) => {
       }
     );
   } catch (err) {
-    res.status(400).send('login error');
+    next(err);
   }
 };
 
@@ -81,7 +93,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     }
 
     const token: string = req.headers['x-access-token'].toString();
-    const secret_key = process.env.SECRET_KEY || 'secret_key';
+    const secret_key = properties.jwtSecret;
 
     // token does not exist
     if (!token) {
