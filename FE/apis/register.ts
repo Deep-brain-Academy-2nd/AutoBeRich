@@ -8,9 +8,7 @@ type Data = {
 
 const registerAPI = {
   register: (obj: Data) => {
-    API.post('users/signup', {
-      obj,
-    })
+    API.post('users/signup', obj)
       .then((res: any) => {
         return res
           .status(200)
