@@ -5,6 +5,7 @@ import indexRouter from './routes/index';
 import connectDB from './loaders/mongo-connector';
 import properties from './config/properties/properties';
 import cors from 'cors';
+import session from 'express-session';
 
 connectDB();
 //require('dotenv').config();
@@ -25,8 +26,18 @@ const coreOptions = {
 };
 app.use(cors(coreOptions));
 
-app.use('/', indexRouter);
+app.use(
+  session({
+    secret: 'autoberich_session_key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      expires: new Date(Date.now() + 60 * 60 * 24),
+    },
+  })
+);
 
+app.use('/', indexRouter);
 app
   .listen(app.get('port'), () => {
     console.log(app.get('port'), 'started server');
