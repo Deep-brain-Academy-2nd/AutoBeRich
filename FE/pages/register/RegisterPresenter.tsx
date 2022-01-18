@@ -1,18 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Router from 'next/router';
+import styled from 'styled-components';
 
 const RegisterPresenter = ({ handleSubmit }) => {
   // useEffect(() => {
   //   // redirect to home if user is authenticated
   //   if (user) Router.replace('/');
   // }, [user]);
+  const RegisterMain = styled.div`
+    color: #fff;
+    height: 88%;
+    size: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-image: url('/images/background.png');
+  `;
   return (
     <>
       <Head>
         <title>Sign up</title>
       </Head>
-      <div className="px-4 py-5 my-5 text-center">
+      <RegisterMain>
         <h1 className="display-5 fw-bold mb-5">가입하기</h1>
         <div className="col-lg-6 mx-auto">
           <form onSubmit={handleSubmit}>
@@ -80,7 +91,7 @@ const RegisterPresenter = ({ handleSubmit }) => {
             홈으로
           </button>
         </div>
-      </div>
+      </RegisterMain>
     </>
   );
 };

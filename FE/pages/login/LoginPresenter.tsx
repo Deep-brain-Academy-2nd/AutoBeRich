@@ -2,6 +2,18 @@ import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import styled from 'styled-components';
+
+const LoginMain = styled.div`
+  color: #fff;
+  height: 88%;
+  size: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-image: url('/images/background.png');
+`;
 
 function LoginPresenter({ handleSubmit }) {
   const [errorMsg, setErrorMsg] = useState('');
@@ -17,7 +29,7 @@ function LoginPresenter({ handleSubmit }) {
       <Head>
         <title>Login</title>
       </Head>
-      <div className="loginMain">
+      <LoginMain>
         <h1>로그인</h1>
         <div className="logWrapper">
           <form onSubmit={handleSubmit}>
@@ -59,7 +71,7 @@ function LoginPresenter({ handleSubmit }) {
             <a>Forget password</a>
           </Link>
         </div>
-      </div>
+      </LoginMain>
     </>
   );
 }
