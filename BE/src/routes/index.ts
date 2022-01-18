@@ -11,13 +11,11 @@ const router = express.Router();
 
 //const access_key = process.env.UPBIT_OPEN_API_ACCESS_KEY;
 //const secret_key = process.env.UPBIT_OPEN_API_SECRET_KEY;
-const access_key = properties.upbitOpenApiAccessKey;
-const secret_key = properties.upbitOpenApiSecretKey;
 
-const payload = {
+/*const payload = {
   access_key: access_key,
   nonce: uuidv4(),
-};
+};*/
 
 /*const token = sign(payload, secret_key);*/
 /*const authorizationToken = `Bearer ${token}`;*/
