@@ -1,13 +1,19 @@
 import API from '.';
-import axios from 'axios'
+
+type Data = {
+  email: string;
+  password: string;
+};
+
 const loginAPI = {
-  login: async (obj: any) => {
-    await axios.post('http://localhost:5000/users/login', {
+  login: async (obj: Data) => {
+    await API.post('users/login', {
       obj,
     })
-      .then((res) => {
-        console.log(res, 'loginAPI');
-        return res;
+      .then((res: any) => {
+        return res
+          .status(200)
+          .json({ email: res.email, password: res.password });
       })
       .catch((err) => {
         console.error(err);
