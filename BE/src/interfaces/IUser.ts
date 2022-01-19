@@ -5,6 +5,7 @@ export interface IUser {
   date: Date;
   secretKey: string;
   accessKey: string;
+  strategy?: string;
 }
 
 export interface IUserInputDTO {
@@ -14,6 +15,7 @@ export interface IUserInputDTO {
   date?: Date;
   secretKey: string;
   accessKey: string;
+  strategy?: string;
 }
 
 export interface userUniqueSearchInput {
