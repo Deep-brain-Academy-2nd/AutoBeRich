@@ -1,12 +1,11 @@
 import express, { NextFunction, Request, Response } from 'express';
 import bcrypt, { compare } from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import errorGenerator from '../errors/error-generator';
 import { body, validationResult } from 'express-validator';
 import { IUser, IUserInputDTO } from '../interfaces/IUser';
 import { UserService } from '../services';
 import properties from '../config/properties/properties';
-import AES from 'crypto-js/aes';
+import CryptoJS from 'crypto-js';
 
 const signUp = async (req: Request, res: Response, next: NextFunction) => {
   const { name, email, password, secretKey, accessKey }: IUserInputDTO = req.body;
@@ -14,22 +13,20 @@ const signUp = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ msg: errors.array()[0].msg });
     }
 
     const foundUser = await UserService.findEmail({ email });
-    if (foundUser) errorGenerator({ statusCode: 409 }); // 이미 가입한 유저
+    if (foundUser) {
+      res.status(409).send({ msg: 'This ID is already in use.' });
+    } // 이미 가입한 유저
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const key = properties.key;
-
-    const encryptedSecretKey = AES.encrypt(secretKey, key).toString();
-    const encryptedAccessKey = AES.encrypt(accessKey, key).toString();
-
-    //복호환
-    //var decryptedData = JSON.parse(encryptedSecretKey.toString(CryptoJS.enc.Utf8));
+    const encryptedSecretKey = CryptoJS.AES.encrypt(secretKey, key).toString();
+    const encryptedAccessKey = CryptoJS.AES.encrypt(accessKey, key).toString();
 
     const createdUser = await UserService.createUser({
       name,
@@ -45,22 +42,20 @@ const signUp = async (req: Request, res: Response, next: NextFunction) => {
 
 const logIn = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { email, password } = req.body.obj;
+    const { email, password } = req.body;
 
     const user: IUser | null = await UserService.findEmail({ email });
 
     if (!user) {
       //해당 이메일 주소 없음.
-      //res.status(400).send('email not exist');
-      errorGenerator({ msg: 'email not exist', statusCode: 400 });
+      res.status(400).send({ msg: 'email not exist' });
       return;
     }
 
     const result = await compare(password, user.password);
     if (!result) {
       //비밀번호 불일치.
-      //res.status(400).send('password incorrect');
-      errorGenerator({ msg: 'password incorrect', statusCode: 400 });
+      res.status(400).send({ msg: 'password incorrect' });
       return;
     }
 
@@ -78,6 +73,10 @@ const logIn = async (req: Request, res: Response, next: NextFunction) => {
         });
       }
     );
+
+    //복호화
+    //const bytes = CryptoJS.AES.decrypt(user.secretKey, key);
+    //const decryptedSecretKey = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
   } catch (err) {
     next(err);
   }
@@ -88,7 +87,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     if (!req.headers['x-access-token']) {
       return res.status(403).json({
         success: false,
-        message: 'not logged in',
+        msg: 'not logged in',
       });
     }
 
@@ -99,7 +98,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     if (!token) {
       return res.status(403).json({
         success: false,
-        message: 'not logged in',
+        msg: 'not logged in',
       });
     }
 
@@ -113,11 +112,10 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
       };*/
       next();
     } else {
-      //res.status(401).json({ error: 'unauthorized' });
-      errorGenerator({ msg: 'unauthorized', statusCode: 401 });
+      res.status(401).json({ msg: 'unauthorized' });
     }
   } catch (err) {
-    res.status(401).json({ error: 'token expired' });
+    res.status(401).json({ msg: 'token expired' });
   }
 };
 
