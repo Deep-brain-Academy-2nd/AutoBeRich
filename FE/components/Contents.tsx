@@ -9,6 +9,9 @@ const Section = styled.section`
   height: 100%;
   font-size: 3rem;
   display: flex;
+  @media only screen and (max-width: 768px) {
+    flex-direction: column;
+  }
   justify-content: space-around;
   align-items: center;
   background-image: url('/images/background.png');

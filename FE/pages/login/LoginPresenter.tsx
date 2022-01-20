@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import styled from 'styled-components';
+
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const LoginMain = styled.div`
   color: #fff;
@@ -16,53 +24,91 @@ const LoginMain = styled.div`
 `;
 
 function LoginPresenter({ handleSubmit }) {
-  const [errorMsg, setErrorMsg] = useState('');
-
-  const router = useRouter();
-  // useEffect(() => {
-  //   // redirect to home if user is authenticated
-  //   if (user) router.push('/');
-  // }, [user]);
-
+  const theme = createTheme({
+    typography: {
+      // In Chinese and Japanese the characters are usually larger,
+      // so a smaller fontsize may be appropriate.
+      fontSize: 25,
+    },
+  });
   return (
     <>
       <Head>
         <title>Login</title>
       </Head>
       <LoginMain>
-        <h1>로그인</h1>
-        <div className="logWrapper">
-          <form onSubmit={handleSubmit}>
-            {errorMsg ? <p style={{ color: 'red' }}>{errorMsg}</p> : null}
-            <div className="form-floating mb-2">
-              <label htmlFor="email">이메일 주소</label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                className="form-control"
-                placeholder="이메일 주소"
-              />
-            </div>
-            <div className="form-floating mb-2">
-              <label htmlFor="password">비밀번호</label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                className="form-control"
-                placeholder="비밀번호"
-              />
-            </div>
-            <button className="w-100 btn btn-lg btn-primary mb-2" type="submit">
-              로그인
-            </button>
-          </form>
-          <Link href="/register">가입하기</Link>
-          <Link href="/forget-password">
-            <a>Forget password</a>
-          </Link>
-        </div>
+        <ThemeProvider theme={theme}>
+          <Container component="main" maxWidth="xs">
+            <CssBaseline />
+            <Box
+              sx={{
+                marginTop: 8,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+              }}
+            >
+              <Typography component="h1" variant="h5">
+                Sign in
+              </Typography>
+              <Box
+                component="form"
+                onSubmit={handleSubmit}
+                noValidate
+                sx={{ mt: 1 }}
+              >
+                <TextField
+                  id="email"
+                  name="email"
+                  type="email"
+                  margin="normal"
+                  placeholder="email"
+                  required
+                  fullWidth
+                  label="Email Address"
+                  autoComplete="email"
+                  autoFocus
+                  InputProps={{
+                    style: {
+                      backgroundColor: 'white',
+                    },
+                  }}
+                />
+                <TextField
+                  id="password"
+                  name="password"
+                  type="password"
+                  margin="normal"
+                  placeholder="password"
+                  required
+                  fullWidth
+                  label="Password"
+                  autoComplete="current-password"
+                  InputProps={{
+                    style: {
+                      backgroundColor: 'white',
+                    },
+                  }}
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Sign In
+                </Button>
+                <Grid container>
+                  <Grid item>
+                    <Link href="/register">
+                      {"Don't have an account? Sign Up"}
+                    </Link>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Box>
+          </Container>
+        </ThemeProvider>
       </LoginMain>
     </>
   );

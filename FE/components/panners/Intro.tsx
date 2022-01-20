@@ -14,13 +14,13 @@ const Introy = () => {
   return (
     <IntroyWrap>
       <Image src={oldMan} alt="oldMan" />
-      <text>
+      <div>
         <p>내 계좌 정보를 한 눈에</p>
         <p>확인하고 전략매매를 할 수 있는</p>
         <p>
           AutoBeRich <Image src={money} alt="money" />
         </p>
-      </text>
+      </div>
     </IntroyWrap>
   );
 };
