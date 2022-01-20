@@ -5,6 +5,8 @@ import { ThemeProvider } from 'styled-components';
 import { theme } from '../styles/theme';
 import { GlobalStyle } from '../styles/global-style';
 import { wrapper } from '../store';
+import TopBar from '../components/TopBar';
+import Footer from '../components/Footer';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -16,7 +18,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       </Head>
       <GlobalStyle />
       <ThemeProvider theme={theme}>
+        <TopBar />
         <Component {...pageProps} />
+        <Footer />
       </ThemeProvider>
     </>
   );
