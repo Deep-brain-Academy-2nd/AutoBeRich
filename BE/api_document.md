@@ -18,13 +18,17 @@
 
 | Code | Type | Description              |
 |------|------|--------------------------|
-| 204  | 성공   |                          |
-| 400 | 실패   | 이름, 패스워드 등 validation 실패 |
-| 409 | 실패 | 이미 가입한 유저                |
+| 200  | 성공   |                          |
+| 400  | 실패   | 이름, 패스워드 등 validation 실패 |
+| 409  | 실패 | 이미 가입한 유저                |
 
-실패 Returns:
+Returns:
 ```
-{"msg":"Please enter a password with 6 or more characters"}
+{
+        status: 'failure',
+        code: 401,
+        msg: 'This ID is already in use.',
+}
 ```
 
 validation 조건
@@ -57,9 +61,13 @@ validation 조건
 | 204  | 성공   |                        |
 | 400 | 실패   | 헤딩 이메일 주소 없음, 비밀번호 불일치 |
 
-실패 Returns:
+Returns:
 ```
-{"msg":"email not exist"}
+{
+    status: 'failure',
+    code: 401,
+    msg: 'password incorrect',
+}
 ```
 
 ### Seesion
@@ -87,7 +95,11 @@ validation 조건
 | 401  | 실패   | 인증 실패       |
 | 403  | 실패   | 액세스 거부      |
 
-실패 Returns:
+Returns:
 ```
-{"msg":"unauthorized"}
+{
+    status: 'failure',
+    code: 401,
+    msg: 'unauthorized',
+}
 ```
