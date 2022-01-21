@@ -63,11 +63,22 @@ validation 조건
 
 Returns:
 ```
+//실패
 {
     status: 'failure',
     code: 401,
     msg: 'password incorrect',
 }
+
+//성공
+{{
+    "status":"success",
+    "code":200,
+    "msg":"Login successful.",
+    "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InF3ZUB0ZXN0LmNvbSIsImlhdCI6MTY0Mjc2NzQ1MywiZXhwIjoxNjQyODAzNDUzfQ._Q1QaQ1hF8Xv4IGP2-1sFE_w_9OST-G-fbwALfygfNI",
+    "email":"qwe@test.com",
+    "name":"qwe"
+ }
 ```
 
 ### Seesion
