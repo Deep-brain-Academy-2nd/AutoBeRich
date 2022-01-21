@@ -16,5 +16,6 @@ router.post(
 router.use('/login', UserController.logIn);
 router.use('/verify', UserController.verifyToken);
 router.get('/account/info', UserController.accountInfo);
+router.put('/strategy', UserController.updateStrategy);
 
 export default router;

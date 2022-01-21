@@ -23,6 +23,9 @@ const UserSchema = new mongoose.Schema({
   accessKey: {
     type: String,
   },
+  strategy: {
+    type: String,
+  },
 });
 
 export default mongoose.model<IUser & mongoose.Document>('User', UserSchema);

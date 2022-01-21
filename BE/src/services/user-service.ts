@@ -14,7 +14,12 @@ const findEmail = (data: userUniqueSearchInput) => {
   return result;
 };
 
+const updateStrategy = (data: userUniqueSearchInput) => {
+  const doc = User.findOneAndUpdate({ email: data.email }, { $set: { strategy: data.strategy } });
+};
+
 export default {
   createUser,
   findEmail,
+  updateStrategy,
 };

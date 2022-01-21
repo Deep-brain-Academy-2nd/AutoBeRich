@@ -20,4 +20,5 @@ export interface IUserInputDTO {
 
 export interface userUniqueSearchInput {
   email: string;
+  strategy?: string;
 }
