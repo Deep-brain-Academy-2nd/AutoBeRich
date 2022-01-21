@@ -1,15 +1,16 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
 import API from '.';
-import axios from 'axios';
+
+type Data = {
+  email: string;
+  password: string;
+};
+
 const registerAPI = {
-  register: (obj: any) => {
-    const port = process.env.REACT_APP_API_URL;
-    console.log(port, obj, API, 'api');
-    axios
-      .post('http://localhost:5000/users/signup', {
-        obj,
-      })
-      .then((res) => {
-        console.log(res, 'API');
+  register: (obj: Data) => {
+    API.post('users/signup', obj)
+      .then((res: any) => {
+        console.log(res);
         return res;
       })
       .catch((err) => {

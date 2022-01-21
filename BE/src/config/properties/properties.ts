@@ -11,7 +11,7 @@ export default {
   jwtSecret: process.env.JWT_SECRET || '',
   jwtAlgorithm: process.env.JWT_ALGO || '',
 
-  //업비트
-  upbitOpenApiAccessKey: process.env.UPBIT_OPEN_API_ACCESS_KEY || '',
-  upbitOpenApiSecretKey: process.env.UPBIT_OPEN_API_SECRET_KEY || '',
+  //암호화 키
+  key: process.env.KEY || '',
+  key2: process.env.KEY2 || '',
 };
