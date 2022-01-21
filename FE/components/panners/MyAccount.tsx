@@ -8,7 +8,8 @@ const MyAccountWrap = Styled.div`
     border-radius: 5%;
 `;
 
-const MyAccount = () => {
+const MyAccount = (userInfo) => {
+  console.log(userInfo);
   return <MyAccountWrap>MyAccountWrap</MyAccountWrap>;
 };
 
