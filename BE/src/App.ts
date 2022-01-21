@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { NextFunction, Request, Response} from 'express';
 import morgan from 'morgan';
 import path from 'path';
 import indexRouter from './routes/index';
@@ -29,11 +29,16 @@ const coreOptions = {
 };
 app.use(cors(coreOptions));
 
+const fileStoreOptions = {
+  path: '.sessions',
+  reapInterval: 10,
+};
+
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 app.use(
   session({
-    secret: properties.key2,
+    secret: properties.sessionEncryptKey,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -42,6 +47,16 @@ app.use(
     store: new fileStore(),
   })
 );
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  // @ts-ignore
+  if (!req.session.user) {
+    // @ts-ignore
+    req.session.user = {};
+  }
+
+  next();
+});
 
 app.use('/', indexRouter);
 app
