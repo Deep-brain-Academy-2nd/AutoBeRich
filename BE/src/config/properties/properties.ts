@@ -13,4 +13,5 @@ export default {
 
   //암호화 키
   key: process.env.KEY || '',
+  key2: process.env.KEY2 || '',
 };

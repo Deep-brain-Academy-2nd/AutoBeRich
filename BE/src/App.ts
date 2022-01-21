@@ -6,6 +6,9 @@ import connectDB from './loaders/mongo-connector';
 import properties from './config/properties/properties';
 import cors from 'cors';
 import session from 'express-session';
+import session_file_store from 'session-file-store';
+
+const fileStore = session_file_store(session);
 
 connectDB();
 //require('dotenv').config();
@@ -26,14 +29,17 @@ const coreOptions = {
 };
 app.use(cors(coreOptions));
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 app.use(
   session({
-    secret: 'autoberich_session_key',
+    secret: properties.key2,
     resave: false,
     saveUninitialized: false,
     cookie: {
       expires: new Date(Date.now() + 60 * 60 * 24),
     },
+    store: new fileStore(),
   })
 );
 

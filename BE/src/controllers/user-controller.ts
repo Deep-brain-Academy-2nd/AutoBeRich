@@ -101,6 +101,8 @@ const logIn = async (req: Request, res: Response, next: NextFunction) => {
           code: 200,
           msg: 'Login successful.',
           token: token,
+          email: user.email,
+          name: user.name,
         });
       }
     );
@@ -200,22 +202,6 @@ const accountInfo = async (req: Request, res: Response, next: NextFunction) => {
         console.error(error);
         res.status(417).json({ msg: error });
       });
-
-    /*// @ts-ignore
-    axios
-      // @ts-ignore
-      .request(options)
-      // @ts-ignore
-      .then(function (response: Response) {
-        // @ts-ignore
-        console.log(response.data);
-        // @ts-ignore
-        res.status(200).json({ obj: response.data });
-      })
-      .catch(function (error: Error) {
-        console.error(error);
-        res.status(417).json({ msg: error });
-      });*/
   } catch (err) {
     res.status(417).json({ msg: 'Failed to get my account information from Upbit.' });
   }
