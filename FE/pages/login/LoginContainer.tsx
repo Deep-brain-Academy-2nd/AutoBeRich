@@ -11,6 +11,7 @@ type req = {
 const LoginContainer = () => {
   async function onSubmit(e: any) {
     e.preventDefault();
+    const email = e.currentTarget.email.value;
     const body: req = {
       email: e.currentTarget.email.value,
       password: e.currentTarget.password.value,
@@ -22,7 +23,7 @@ const LoginContainer = () => {
     if (res && res.data.code === 200) {
       Router.replace('/');
       console.log(res.data.name, res.data);
-      localStorage.setItem('name', res.data.name);
+      localStorage.setItem('email', email);
       localStorage.setItem('token', res.data.token);
     } else {
       alert('login 실패');

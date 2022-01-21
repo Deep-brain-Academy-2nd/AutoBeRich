@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 import styled from 'styled-components';
@@ -13,24 +13,35 @@ const NavBar = styled.nav`
 `;
 
 const TopBar = () => {
-  // console.log(localStorage);
+  const [name, setName] = useState('');
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      setName(localStorage.getItem('email'));
+    }
+  });
+  const onLogout = () => {
+    localStorage.removeItem('email');
+    localStorage.removeItem('token');
+    setName('');
+  };
+
   return (
     <NavBar>
       <Link href="/">
         <a>AutoBeRich</a>
       </Link>
-      {/* {localStorage.getItem('token') ? ( */}
-      <>
-        이름
+      {name ? (
+        <>
+          {name}
+          <Link href="/login">
+            <a onClick={onLogout}>로그아웃</a>
+          </Link>
+        </>
+      ) : (
         <Link href="/login">
-          <a>로그아웃</a>
+          <a>로그인하기</a>
         </Link>
-      </>
-      {/* ) : ( */}
-      <Link href="/login">
-        <a>로그인하기</a>
-      </Link>
-      {/* )} */}
+      )}
     </NavBar>
   );
 };
