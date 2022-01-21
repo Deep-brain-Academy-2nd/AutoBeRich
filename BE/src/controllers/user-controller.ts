@@ -1,4 +1,4 @@
-import express, {NextFunction, request, Request, Response} from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import bcrypt, { compare } from 'bcryptjs';
 import jwt, { sign } from 'jsonwebtoken';
 import { body, validationResult } from 'express-validator';
@@ -44,6 +44,12 @@ const signUp = async (req: Request, res: Response, next: NextFunction) => {
       password: hashedPassword,
       accessKey: encryptedAccessKey,
       secretKey: encryptedSecretKey,
+    });
+
+    res.status(200).json({
+      status: 'success',
+      code: 200,
+      msg: 'sign up successful',
     });
   } catch (err) {
     next(err);
@@ -156,11 +162,11 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
 
 const accountInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    //const { email } = { email: 'cde@test.com' };
+    const { email } = { email: 'cde@test.com' };
 
-    //const user: IUser | null = await UserService.findEmail({ email });
+    const user: IUser | null = await UserService.findEmail({ email });
     // @ts-ignore
-    const bytes = CryptoJS.AES.decrypt(req.session.access, properties.key);
+    const bytes = CryptoJS.AES.decrypt(user.accessKey, properties.key);
     const decryptedAccessKey = bytes.toString(CryptoJS.enc.Utf8);
 
     const payload = {
@@ -169,7 +175,7 @@ const accountInfo = async (req: Request, res: Response, next: NextFunction) => {
     };
 
     // @ts-ignore
-    const tmp = CryptoJS.AES.decrypt(req.session.secret, properties.key);
+    const tmp = CryptoJS.AES.decrypt(user.secretKey, properties.key);
     const decryptedSecretKey = tmp.toString(CryptoJS.enc.Utf8);
     const token = sign(payload, decryptedSecretKey);
 
@@ -180,10 +186,20 @@ const accountInfo = async (req: Request, res: Response, next: NextFunction) => {
     };
 
     // @ts-ignore
-    res = request(options, (error: any, response: any, body: any) => {
-      if (error) throw new Error(error);
-      console.log(body);
-    });
+    axios
+      // @ts-ignore
+      .request(options)
+      // @ts-ignore
+      .then(function (response: Response) {
+        // @ts-ignore
+        console.log(response.data);
+        // @ts-ignore
+        res.status(200).json({ obj: response.data });
+      })
+      .catch(function (error: Error) {
+        console.error(error);
+        res.status(417).json({ msg: error });
+      });
 
     /*// @ts-ignore
     axios
