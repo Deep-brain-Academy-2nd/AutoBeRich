@@ -13,14 +13,24 @@ const NavBar = styled.nav`
 `;
 
 const TopBar = () => {
+  // console.log(localStorage);
   return (
     <NavBar>
       <Link href="/">
         <a>AutoBeRich</a>
       </Link>
+      {/* {localStorage.getItem('token') ? ( */}
+      <>
+        이름
+        <Link href="/login">
+          <a>로그아웃</a>
+        </Link>
+      </>
+      {/* ) : ( */}
       <Link href="/login">
         <a>로그인하기</a>
       </Link>
+      {/* )} */}
     </NavBar>
   );
 };

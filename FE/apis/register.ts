@@ -10,9 +10,8 @@ const registerAPI = {
   register: (obj: Data) => {
     API.post('users/signup', obj)
       .then((res: any) => {
-        return res
-          .status(200)
-          .json({ email: res.email, password: res.password });
+        console.log(res);
+        return res;
       })
       .catch((err) => {
         console.error(err);
