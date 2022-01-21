@@ -9,7 +9,6 @@ const MyAccountWrap = Styled.div`
 `;
 
 const MyAccount = (userInfo) => {
-  console.log(userInfo);
   return <MyAccountWrap>MyAccountWrap</MyAccountWrap>;
 };
 

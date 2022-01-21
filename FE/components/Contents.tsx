@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Intro from './panners/Intro';
-import MyAccount from './panners/MyAccount';
+import MyAccountContainer from './panners/MyAccountContainer';
 import SelectStrategy from './panners/SelectStrategy';
 
 const Section = styled.section`
@@ -21,7 +21,7 @@ const Contents = () => {
   return (
     <Section>
       <Intro />
-      <MyAccount />
+      <MyAccountContainer />
       <SelectStrategy />
     </Section>
   );

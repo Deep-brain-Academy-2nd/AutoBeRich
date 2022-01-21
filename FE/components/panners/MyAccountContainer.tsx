@@ -6,10 +6,11 @@ import MyAccount from './MyAccount';
 const MyAccountContainer = () => {
   const [userInfo, setUserInfo] = useState('');
   useEffect(() => {
-    getAccountInfos();
+    // getAccountInfos();
   }, []);
   const getAccountInfos = async () => {
     const res = await API.get('/account/info');
+    console.log(res, 'getAccountInfo');
     setUserInfo(res.data);
   };
   return <MyAccount userInfo={userInfo} />;

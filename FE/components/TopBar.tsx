@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 import styled from 'styled-components';
+import { useAppSelector } from '../store/hooks';
+import { selectInfo } from '../store/reducers/userInfo';
 
 const NavBar = styled.nav`
   display: flex;
@@ -13,14 +15,16 @@ const NavBar = styled.nav`
 `;
 
 const TopBar = () => {
+  const info: any = useAppSelector(selectInfo);
   const [name, setName] = useState('');
   useEffect(() => {
-    if (localStorage.getItem('token')) {
-      setName(localStorage.getItem('email'));
+    if (localStorage.getItem('name')) {
+      setName(localStorage.getItem('name'));
     }
-  });
+  }, []);
   const onLogout = () => {
     localStorage.removeItem('email');
+    localStorage.removeItem('name');
     localStorage.removeItem('token');
     setName('');
   };

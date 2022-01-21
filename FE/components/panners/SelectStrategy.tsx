@@ -17,11 +17,11 @@ const SelectStrategyWrap = Styled.div`
 
 const SelectStrategy = (propsStrategy) => {
   const [strategy, setStrategy] = useState('');
-  const handleChange = (event) => {
+  const handleChange = (event: any) => {
     setStrategy(event.target.value);
   };
   useEffect(() => {
-    console.log(propsStrategy);
+    console.log(propsStrategy, 'propsStrategy');
   }, []);
   return (
     <SelectStrategyWrap>
