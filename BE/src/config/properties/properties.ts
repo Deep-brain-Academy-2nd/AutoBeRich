@@ -12,6 +12,6 @@ export default {
   jwtAlgorithm: process.env.JWT_ALGO || '',
 
   //암호화 키
-  key: process.env.KEY || '',
-  key2: process.env.KEY2 || '',
+  upbitEncryptKey: process.env.UPBIT_ENCRYPT_KEY || '',
+  sessionEncryptKey: process.env.SESSION_ENCRYPT_KEY || '',
 };
