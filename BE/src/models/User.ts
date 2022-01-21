@@ -17,12 +17,6 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  secretKey: {
-    type: String,
-  },
-  accessKey: {
-    type: String,
-  },
 });
 
 export default mongoose.model<IUser & mongoose.Document>('User', UserSchema);

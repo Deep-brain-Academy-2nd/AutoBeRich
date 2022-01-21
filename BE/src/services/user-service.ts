@@ -8,9 +8,10 @@ const createUser = (data: IUserInputDTO) => {
 
 // email로 user가 존재하는지 확인
 const findEmail = (data: userUniqueSearchInput) => {
-  const { email } = data;
+  const email = data;
 
   const result = User.findOne({ email });
+  console.log(result, '@@@');
   return result;
 };
 
