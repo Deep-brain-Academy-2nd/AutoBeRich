@@ -8,6 +8,7 @@ import properties from '../config/properties/properties';
 import CryptoJS from 'crypto-js';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
+import { TradeService } from '../services';
 
 const signUp = async (req: Request, res: Response, next: NextFunction) => {
   const { name, email, password, secretKey, accessKey }: IUserInputDTO = req.body;
@@ -232,6 +233,8 @@ const updateStatus = async (req: Request, res: Response, next: NextFunction) => 
     const { email, status } = req.body;
 
     await UserService.updateStatus({ email, status });
+
+    const result = await TradeService.tradeStating({ email });
 
     res.status(200).json({
       status: 'success',
