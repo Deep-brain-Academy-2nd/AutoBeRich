@@ -6,6 +6,7 @@ export interface IUser {
   secretKey: string;
   accessKey: string;
   strategy?: string;
+  status?: string;
 }
 
 export interface IUserInputDTO {
@@ -16,9 +17,11 @@ export interface IUserInputDTO {
   secretKey: string;
   accessKey: string;
   strategy?: string;
+  status?: string;
 }
 
 export interface userUniqueSearchInput {
   email: string;
   strategy?: string;
+  status?: boolean;
 }

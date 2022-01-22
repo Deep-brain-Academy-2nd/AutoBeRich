@@ -93,14 +93,6 @@ const logIn = async (req: Request, res: Response, next: NextFunction) => {
       (err, token) => {
         if (err) throw err;
         // @ts-ignore
-        req.session.user = {
-          email: user.email,
-          name: user.name,
-          secret_key: user.secretKey,
-          access_key: user.accessKey,
-        };
-
-        console.log(req.session);
 
         // @ts-ignore
         res.status(200).json({
@@ -161,11 +153,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
       });
     }
   } catch (err) {
-    res.status(401).json({
-      status: 'failure',
-      code: 401,
-      msg: 'not logged in',
-    });
+    next(err);
   }
 };
 
@@ -176,7 +164,7 @@ const accountInfo = async (req: Request, res: Response, next: NextFunction) => {
     const user: IUser | null = await UserService.findEmail({ email });
 
     // @ts-ignore
-    const { secretKey, accessKey } = user;
+    const { secretKey, accessKey, strategy } = user;
     // @ts-ignore
     const bytes = CryptoJS.AES.decrypt(accessKey, properties.upbitEncryptKey);
     const decryptedAccessKey = bytes.toString(CryptoJS.enc.Utf8);
@@ -204,16 +192,24 @@ const accountInfo = async (req: Request, res: Response, next: NextFunction) => {
       // @ts-ignore
       .then(function (response: Response) {
         // @ts-ignore
-        console.log(response.data);
-        // @ts-ignore
-        res.status(200).json({ upbit_accounts: response.data, strategy: 'strategy' });
+        res.status(200).json({
+          // @ts-ignore
+          upbit_accounts: response.data,
+          strategy: strategy,
+          status: 'success',
+          code: 200,
+          msg: 'Get Upbit account information successfully.',
+        });
       })
       .catch(function (error: Error) {
-        console.error(error);
-        res.status(417).json({ msg: error });
+        res.status(417).json({
+          status: 'failure',
+          code: 417,
+          msg: 'https://api.upbit.com/v1/accounts get falied',
+        });
       });
   } catch (err) {
-    res.status(417).json({ msg: 'Failed to get my account information from Upbit.' });
+    next(err);
   }
 };
 
@@ -221,9 +217,29 @@ const updateStrategy = async (req: Request, res: Response, next: NextFunction) =
   try {
     const { email, strategy } = req.body;
     await UserService.updateStrategy({ email, strategy });
-    res.status(200).json({ msg: 'success' });
+    res.status(200).json({
+      status: 'success',
+      code: 200,
+      msg: 'Update traiding strategy successful.',
+    });
   } catch (err) {
-    res.status(417).json({ msg: 'Failed to get my account information from Upbit.' });
+    next(err);
+  }
+};
+
+const updateStatus = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email, status } = req.body;
+
+    await UserService.updateStatus({ email, status });
+
+    res.status(200).json({
+      status: 'success',
+      code: 200,
+      msg: 'Update traiding status successful.',
+    });
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -233,4 +249,5 @@ export default {
   verifyToken,
   accountInfo,
   updateStrategy,
+  updateStatus,
 };

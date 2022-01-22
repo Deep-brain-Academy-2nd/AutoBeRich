@@ -20,7 +20,7 @@
 |------|------|--------------------------|
 | 200  | 성공   |                          |
 | 400  | 실패   | 이름, 패스워드 등 validation 실패 |
-| 409  | 실패 | 이미 가입한 유저                |
+| 401  | 실패 | 이미 가입한 유저                |
 
 Returns:
 ```
@@ -58,8 +58,8 @@ validation 조건
 
 | Code | Type | Description            |
 |------|------|------------------------|
-| 204  | 성공   |                        |
-| 400 | 실패   | 헤딩 이메일 주소 없음, 비밀번호 불일치 |
+| 200  | 성공   |                        |
+| 400  | 실패   | 헤딩 이메일 주소 없음, 비밀번호 불일치 |
 
 Returns:
 ```
@@ -71,7 +71,7 @@ Returns:
 }
 
 //성공
-{{
+{
     "status":"success",
     "code":200,
     "msg":"Login successful.",
@@ -114,3 +114,96 @@ Returns:
     msg: 'unauthorized',
 }
 ```
+
+## /users/account/info(GET)
+
+나의 업비트 계좌정보 가져오기
+
+### Request parameters
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| email     | string | 이메일주소       |
+
+### Response
+
+| Code | Type | Description   |
+|------|------|---------------|
+| 200  | 성공   |               |
+| 417  | 실패   | 업비트 URL 요청 실패 |
+
+Returns:
+```
+{
+    "upbit_accounts": [
+        {
+            "currency": "KRW",
+            "balance": "5000.0",
+            "locked": "0.0",
+            "avg_buy_price": "0",
+            "avg_buy_price_modified": true,
+            "unit_currency": "KRW"
+        }
+    ],
+    "strategy": "Changing_Trading",
+    "status": "success",
+    "code": 200,
+    "msg": "Get Upbit account information successfully."
+}
+
+```
+
+## /users/strategy (PUT)
+
+매매전략수정
+
+### Request parameters
+| Parameter | Type | Description                                      |
+|-----------|------|--------------------------------------------------|
+| strategy  | string | 매매전략 (Changing_Trading: 변동성매매, RSI_Trading: RSI) |
+
+### Response
+| Code | Type | Description   |
+|------|------|---------------|
+| 200  | 성공   |               |
+
+```
+{
+      status: 'success',
+      code: 200,
+      msg: 'Update traiding strategy successful.',
+}
+```
+
+## /users/status (PUT)
+
+매매상태수정
+
+### Request parameters
+| Parameter    | Type | Description |
+|--------------|--|-------------|
+| status | boolean | 매매시작상태      |
+
+### Response
+| Code | Type | Description   |
+|------|------|---------------|
+| 200  | 성공   |               |
+
+```
+{
+      status: 'success',
+      code: 200,
+      msg: 'Update traiding status successful.',
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
