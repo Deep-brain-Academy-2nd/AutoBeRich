@@ -8,11 +8,45 @@ const SelectStrategyContainer = () => {
     getAccountInfos();
   }, []);
   const getAccountInfos = async () => {
-    const res = await API.put('/user');
-    setStrategy(res.data);
+    const res = await API.get('/user');
     console.log(res);
   };
-  return <SelectStrategy propsStrategy={strategy} />;
+  const changeStrategy = async (chooseStrategy: string) => {
+    if (chooseStrategy === 'Changing_Trading') {
+      const res = await API.put('/user', chooseStrategy);
+      if (res.data.code === 200) {
+        console.log(res, 'changStrategy');
+        alert('변경완료');
+        setStrategy(res.data);
+      } else {
+        console.log(res.data, '변경실패');
+        alert('변경 실패하였습니다.');
+      }
+    } else {
+      alert('현재는 변동성 매매 전략만 선택 가능합니다.');
+      return;
+    }
+  };
+  const changeTradingStatus = async (status: boolean) => {
+    try {
+      const res = await API.post('/user/trading_status', status);
+      if (res.data.message === 'Change_status_true') {
+        alert('자동 매매가 시작됩니다');
+      } else if (res.data.message === 'Change_status_false') {
+        alert('자동 매매가 중지됩니다.');
+      }
+    } catch (error) {
+      alert('매매 선택이 실패하였습니다.');
+      console.error(error);
+    }
+  };
+  return (
+    <SelectStrategy
+      propsStrategy={strategy}
+      changeStrategy={changeStrategy}
+      changeTradingStatus={changeTradingStatus}
+    />
+  );
 };
 
 export default SelectStrategyContainer;
