@@ -8,12 +8,13 @@ const SelectStrategyContainer = () => {
     getAccountInfos();
   }, []);
   const getAccountInfos = async () => {
-    const res = await API.get('/user');
-    console.log(res);
+    // const res = await API.get('/users');
+    // console.log(res);
   };
   const changeStrategy = async (chooseStrategy: string) => {
+    console.log('changeStrategy', chooseStrategy);
     if (chooseStrategy === 'Changing_Trading') {
-      const res = await API.put('/user', chooseStrategy);
+      const res = await API.put('/users/strategy', chooseStrategy);
       if (res.data.code === 200) {
         console.log(res, 'changStrategy');
         alert('변경완료');
@@ -29,7 +30,7 @@ const SelectStrategyContainer = () => {
   };
   const changeTradingStatus = async (status: boolean) => {
     try {
-      const res = await API.post('/user/trading_status', status);
+      const res = await API.post('/users/trading_status', status);
       if (res.data.message === 'Change_status_true') {
         alert('자동 매매가 시작됩니다');
       } else if (res.data.message === 'Change_status_false') {

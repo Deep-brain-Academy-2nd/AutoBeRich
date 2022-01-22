@@ -56,9 +56,10 @@ const SelectStrategy = ({
           <MenuItem value={'Additional plans'}>추가전략(추가예정)</MenuItem>
         </Select>
       </FormControl>
+
       <Box
         sx={{ display: 'flex', justifyContent: 'center' }}
-        onSubmit={() => changeStrategy(strategy)}
+        onClick={() => changeStrategy(strategy)}
       >
         <Button
           type="submit"

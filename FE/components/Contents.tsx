@@ -2,7 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import Intro from './panners/Intro';
 import MyAccountContainer from './panners/MyAccountContainer';
-import SelectStrategy from './panners/SelectStrategy';
+
+import SelectStrategyContainer from './panners/SelectStrategyContainer';
 
 const Section = styled.section`
   width: 100%;
@@ -22,7 +23,7 @@ const Contents = () => {
     <Section>
       <Intro />
       <MyAccountContainer />
-      <SelectStrategy />
+      <SelectStrategyContainer />
     </Section>
   );
 };

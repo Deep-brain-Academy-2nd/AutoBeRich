@@ -8,7 +8,7 @@ const MyAccountWrap = Styled.div`
     border-radius: 5%;
 `;
 
-const MyAccount = (userInfo) => {
+const MyAccount = ({ userInfo }) => {
   return (
     <MyAccountWrap>
       <ul>

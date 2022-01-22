@@ -220,9 +220,7 @@ const accountInfo = async (req: Request, res: Response, next: NextFunction) => {
 const updateStrategy = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, strategy } = req.body;
-
     await UserService.updateStrategy({ email, strategy });
-
     res.status(200).json({ msg: 'success' });
   } catch (err) {
     res.status(417).json({ msg: 'Failed to get my account information from Upbit.' });
