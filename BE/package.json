@@ -47,5 +47,10 @@
   "scripts": {
     "dev": "nodemon --exec ts-node src/App.ts",
     "debug": "nodemon --inspect src/App.ts"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "**/sessions/*"
+    ]
   }
 }
