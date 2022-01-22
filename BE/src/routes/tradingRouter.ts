@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import getMyAccountInfos from '../controllers/tradingController';
+import getMyUpbitAccountInfo from '../controllers/tradingController';
 
 const router = Router();
 
-router.get('/getUserInfo', getMyAccountInfos);
+router.get('/getUserInfo', getMyUpbitAccountInfo);
 
 export default router;

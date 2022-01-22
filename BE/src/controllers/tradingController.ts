@@ -1,85 +1,136 @@
-import express from 'express';
-import axios from 'axios';
-import { v4 as uuidv4 } from 'uuid';
+import { NextFunction, Request, Response } from 'express';
 import { sign } from 'jsonwebtoken';
-
+import { UserService } from '../services';
 import properties from '../config/properties/properties';
+import CryptoJS from 'crypto-js';
+import { v4 as uuidv4 } from 'uuid';
+import axios from 'axios';
 
-const router = express.Router();
+const changeResponse = async (data: any) => {
+  interface resultType {
+    krw: number; // 보유 원화
+    totalMoney: number; // 총 매수금액
+    coinList: any; // 보유코인/현재금액
+  }
+  interface coinListType {
+    string: {
+      // coin name flag
+      name: string; // coin name
+      currency: string; // coin flag
+      avgBuyPrice: string; // 매수 평균가
+      currentMoney: number; // 총 매수 금액
+      tradePrice: number; // 해당 코인 현재가
+      volume: string; // 코인 보유수량
+      currentValuePrice: number; // 평가 금액
+      earningRate: number; // 수익률
+    };
+  }
+  const coinList: any = {};
 
-const accessKey = properties.upbitAccessKey;
-const secretKey = properties.upbitSecretKey;
+  let money: number = parseFloat(data[0].balance);
 
-const payload = {
-  accessKey,
-  nonce: uuidv4(),
-};
+  for (let i = 1; i < data.length; i++) {
+    const temp: any = {};
+    money += parseFloat(data[i]['balance']) * parseFloat(data[i]['avg_buy_price']);
+    // coinList[data[i]['unit_currency'] + '-' + data[i]['currency']] = 0;
+    temp['name'] = data[i]['currency'];
+    temp['currency'] = data[i]['unit_currency'] + '-' + data[i]['currency'];
+    temp['avgBuyPrice'] = data[i]['avg_buy_price'];
+    temp['volume'] = data[i]['balance'];
+    temp['currentMoney'] = parseFloat(data[i]['balance']) * parseFloat(data[i]['avg_buy_price']);
+    coinList[temp['currency']] = temp;
+  }
+  const coinArr = Object.keys(coinList);
 
-const token = sign(payload, secretKey);
-const authorizationToken = `Bearer ${token}`;
+  for (let i = 0; i < coinArr.length; i++) {
+    const currentPrice: any = await getCurrentCoinInfos(coinArr[i]);
+    coinList[coinArr[i]]['trade_price'] = currentPrice[0]['trade_price'];
+    coinList[coinArr[i]]['currentValuePrice'] =
+      currentPrice[0]['trade_price'] * parseFloat(coinList[coinArr[i]]['volume']);
+    coinList[coinArr[i]]['earningRate'] = (
+      (coinList[coinArr[i]]['currentValuePrice'] / parseFloat(coinList[coinArr[i]]['currentMoney']) - 1) *
+      100
+    ).toFixed(2);
+  }
 
-// const getMarketAll = () => {
-//   const options = {
-//     method: 'GET',
-//     url: 'https://api.upbit.com/v1/market/all',
-//     params: { isDetails: 'false' },
-//     headers: { Accept: 'application/json' },
-//   };
-
-//   axios
-//     .request(options)
-//     .then(function (response) {
-//       console.log(response.data);
-//     })
-//     .catch(function (error) {
-//       console.error(error);
-//     });
-// };
-
-// const getCoinInfos = (name) => {
-//   const options = {
-//     method: 'GET',
-//     url: 'https://api.upbit.com/v1/ticker',
-//     headers: { Accept: 'application/json' },
-//     params: { markets: name },
-//   };
-
-//   axios
-//     .request(options)
-//     .then(function (response) {
-//       console.log(response.data);
-//     })
-//     .catch(function (error) {
-//       console.error(error);
-//     });
-// };
-type optionType = {
-  method: any;
-  url: string;
-  headers: {
-    Authorization: string;
+  const totalMoney: number = money;
+  const result: resultType = {
+    krw: parseInt(data[0].currency), // 보유 원화
+    totalMoney, // 총 매수금액
+    coinList, // 코인 관련 전체
   };
+  return result;
 };
-const getMyAccountInfos = () => {
-  const options: optionType = {
+
+const getCurrentCoinInfos = (name: string) => {
+  const options: any = {
     method: 'GET',
-    url: 'https://api.upbit.com/v1/accounts',
-    headers: { Authorization: authorizationToken },
+    url: 'https://api.upbit.com/v1/ticker',
+    headers: { Accept: 'application/json' },
+    params: { markets: name },
   };
-
-  axios
-    .request(options)
-    .then(function (response) {
-      console.log(response.data);
-    })
-    .catch(function (error) {
-      console.error(error);
-    });
+  // 비동기로 해결
+  return new Promise((resolve, reject) => {
+    axios
+      .request(options)
+      .then((response: any) => {
+        resolve(response.data);
+      })
+      .catch(function (error) {
+        reject(error);
+        console.error(error);
+      });
+  });
 };
 
-router.get('/getUserInfo', (req, res) => {
-  getMyAccountInfos();
-  res.send('');
-});
+const getMyUpbitAccountInfo = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // const { email }: any = req.query;
+    const email = 'dongwon@likelion.org';
+    const user: any = await UserService.findEmail({ email });
 
-export default getMyAccountInfos;
+    const { secretKey, accessKey, strategy }: any = user;
+    const bytes = CryptoJS.AES.decrypt(accessKey, properties.upbitEncryptKey);
+    const decryptedAccessKey = bytes.toString(CryptoJS.enc.Utf8);
+
+    const payload = {
+      access_key: decryptedAccessKey,
+      nonce: uuidv4(),
+    };
+
+    const tmp = CryptoJS.AES.decrypt(secretKey, properties.upbitEncryptKey);
+    const decryptedSecretKey = tmp.toString(CryptoJS.enc.Utf8);
+    const token = sign(payload, decryptedSecretKey);
+
+    const options: any = {
+      method: 'GET',
+      url: 'https://api.upbit.com/v1/accounts',
+      headers: { Authorization: `Bearer ${token}` },
+    };
+
+    axios
+      .request(options)
+      .then(async function (response: any) {
+        const coinInfo = await changeResponse(response.data);
+        res.status(200).json({
+          upbit_accounts: response.data,
+          coinInfo,
+          strategy: strategy,
+          status: 'success',
+          code: 200,
+          msg: 'Get Upbit account information successfully.',
+        });
+      })
+      .catch(function (error: Error) {
+        res.status(417).json({
+          status: 'failure',
+          code: 417,
+          msg: 'https://api.upbit.com/v1/accounts get falied',
+        });
+      });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export default getMyUpbitAccountInfo;
