@@ -17,7 +17,16 @@ const findEmail = (data: userUniqueSearchInput) => {
 const updateStrategy = async (data: userUniqueSearchInput) => {
   try {
     const { email, strategy } = data;
-    await User.findOneAndUpdate({ email }, { $set: { strategy } });
+    const result = await User.findOneAndUpdate({ email }, { $set: { strategy } });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const updateStatus = async (data: userUniqueSearchInput) => {
+  try {
+    const { email, status } = data;
+    const result = await User.findOneAndUpdate({ email }, { $set: { status } });
   } catch (error) {
     console.error(error);
   }
@@ -27,4 +36,5 @@ export default {
   createUser,
   findEmail,
   updateStrategy,
+  updateStatus,
 };

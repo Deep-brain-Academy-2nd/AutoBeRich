@@ -27,6 +27,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
+  status: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 export default mongoose.model<IUser & mongoose.Document>('User', UserSchema);
