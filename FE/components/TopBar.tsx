@@ -19,10 +19,11 @@ const TopBar = () => {
   const info: any = useAppSelector(selectInfo);
   const [name, setName] = useState('');
   useEffect(() => {
-    if (localStorage.getItem('name')) {
-      setName(localStorage.getItem('name'));
+    const localStorageName = localStorage.getItem('name');
+    if (localStorageName) {
+      setName(localStorageName);
     }
-  }, []);
+  });
   const onLogout = () => {
     localStorage.removeItem('email');
     localStorage.removeItem('name');
