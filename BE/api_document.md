@@ -159,6 +159,7 @@ Returns:
 ### Request parameters
 | Parameter | Type | Description                                      |
 |-----------|------|--------------------------------------------------|
+| email | 이메일 주소 | 이메일 주소 |
 | strategy  | string | 매매전략 (Changing_Trading: 변동성매매, RSI_Trading: RSI) |
 
 ### Response
@@ -179,9 +180,10 @@ Returns:
 매매상태수정
 
 ### Request parameters
-| Parameter    | Type | Description |
-|--------------|--|-------------|
-| status | boolean | 매매시작상태      |
+| Parameter    | Type      | Description |
+|--------------|-----------|-------------|
+| email | string    | 이메일 주소 |
+| status | boolean   | 매매시작상태      |
 
 ### Response
 | Code | Type | Description   |
