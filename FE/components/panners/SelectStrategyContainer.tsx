@@ -12,11 +12,12 @@ const SelectStrategyContainer = () => {
     // console.log(res);
   };
   const changeStrategy = async (chooseStrategy: string) => {
-    console.log('changeStrategy', chooseStrategy);
     if (chooseStrategy === 'Changing_Trading') {
-      const res = await API.put('/users/strategy', chooseStrategy);
+      const res = await API.put('/users/strategy', {
+        email: localStorage.getItem('email'),
+        strategy: chooseStrategy,
+      });
       if (res.data.code === 200) {
-        console.log(res, 'changStrategy');
         alert('변경완료');
         setStrategy(res.data);
       } else {

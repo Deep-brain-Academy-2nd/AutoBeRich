@@ -14,4 +14,8 @@ export default {
   //암호화 키
   upbitEncryptKey: process.env.UPBIT_ENCRYPT_KEY || '',
   sessionEncryptKey: process.env.SESSION_ENCRYPT_KEY || '',
+
+  // upbit key
+  upbitAccessKey: process.env.UPBIT_OPEN_API_ACCESS_KEY || '',
+  upbitSecretKey: process.env.UPBIT_OPEN_API_SECRET_KEY || '',
 };
