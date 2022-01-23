@@ -134,4 +134,6 @@ const getMyUpbitAccountInfo = async (req: Request, res: Response, next: NextFunc
   }
 };
 
-export default getMyUpbitAccountInfo;
+export default {
+  getMyUpbitAccountInfo,
+};

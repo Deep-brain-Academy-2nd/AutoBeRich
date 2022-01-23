@@ -1,18 +1,17 @@
-import User from '../models/User';
-import UserService from './user-service';
-import { ExchangeService, QuoationService } from 'node-upbit';
+import axios, { AxiosRequestConfig } from 'axios';
+import crypto from 'crypto';
+import CryptoJS from 'crypto-js';
+import { sign } from 'jsonwebtoken';
+import { QuoationService } from 'node-upbit';
+import { encode as queryEncode } from 'querystring';
+import { v4 as uuidv4 } from 'uuid';
 import properties from '../config/properties/properties';
 import { IUser, userUniqueSearchInput } from '../interfaces/IUser';
-import CryptoJS from 'crypto-js';
-import { v4 as uuidv4 } from 'uuid';
-import { sign } from 'jsonwebtoken';
-import axios, { AxiosRequestConfig } from 'axios';
-import { IAccount } from '../interfaces/IAccount';
-import { encode as queryEncode } from 'querystring';
-import crypto from 'crypto';
+import UserService from './userService';
 
 const tradeStating = async (data: userUniqueSearchInput) => {
-  const { email } = data;
+  // const { email } = data;
+  const email = 'dongwon@likelion.org';
   const user: IUser | null = await UserService.findEmail({ email });
   // @ts-ignore
   const { secretKey, accessKey, strategy, status }: IUser = user;
@@ -23,45 +22,44 @@ const tradeStating = async (data: userUniqueSearchInput) => {
   const tmp = CryptoJS.AES.decrypt(secretKey, properties.upbitEncryptKey);
   const decryptedSecretKey = tmp.toString(CryptoJS.enc.Utf8);
 
-  //const targetPrice = await getTargetPrice('KRW-BTC', 0.5);
-  //const startTime = await getStartTime('KRW-BTC');
-  //const balances = await getBalance(decryptedAccessKey, decryptedSecretKey);
-  /*const krw = balances.find((item: IAccount) => {
-    return item.currency === 'KRW';
-  });*/
-  //const currentPrice = await getCurrentPrice('KRW-BTC');
+  // try {
+  //   const now = new Date();
+  //   const startTime = await getStartTime('KRW-BTC');
+  //   const endTime = addDays(now, 1).getTime();
+  //   const endTimeTenSeconds = addSeconds(new Date(endTime), -10).getTime();
 
-  try {
-    const now = new Date();
-    const startTime = await getStartTime('KRW-BTC');
-    const endTime = addDays(now, 1).getTime();
-    const endTimeTenSeconds = addSeconds(new Date(endTime), -10).getTime();
+  //   if (startTime < now.getTime() && now.getTime() < endTimeTenSeconds) {
+  //     const targetPrice = await getTargetPrice('KRW-BTC', 0.5);
+  //     const currentPrice = await getCurrentPrice('KRW-BTC');
+  //     if (targetPrice < currentPrice) {
+  //       const balances = await getBalance(decryptedAccessKey, decryptedSecretKey);
+  //       const krw = balances.find((item: IAccount) => {
+  //         return item.currency === 'KRW';
+  //       });
+  //       if (krw.balance > 5000) {
+  //         buyMarketOrder('KRW-BTC', krw * 0.9995, decryptedAccessKey, decryptedSecretKey);
+  //       }
+  //     }
+  //   } else {
+  //     const balances = await getBalance(decryptedAccessKey, decryptedSecretKey);
+  //     const btc = balances.find((item: IAccount) => {
+  //       return item.currency === 'BTC';
+  //     });
 
-    if (startTime < now.getTime() && now.getTime() < endTimeTenSeconds) {
-      const targetPrice = await getTargetPrice('KRW-BTC', 0.5);
-      const currentPrice = await getCurrentPrice('KRW-BTC');
-      if (targetPrice < currentPrice) {
-        const balances = await getBalance(decryptedAccessKey, decryptedSecretKey);
-        const krw = balances.find((item: IAccount) => {
-          return item.currency === 'KRW';
-        });
-        if (krw.balance > 5000) {
-          buyMarketOrder('KRW-BTC', krw * 0.9995, decryptedAccessKey, decryptedSecretKey);
-        }
-      }
-    } else {
-      const balances = await getBalance(decryptedAccessKey, decryptedSecretKey);
-      const btc = balances.find((item: IAccount) => {
-        return item.currency === 'BTC';
-      });
-
-      if (btc.balance > 0.00008) {
-        await sellMarketOrder('KRW-BTC', btc.balance * 0.9995, decryptedAccessKey, decryptedSecretKey);
-      }
-    }
-  } catch (error) {
-    console.log(error);
-  }
+  //     if (btc.balance > 0.00008) {
+  //       await sellMarketOrder('KRW-BTC', btc.balance * 0.9995, decryptedAccessKey, decryptedSecretKey);
+  //     }
+  //   }
+  // } catch (error) {
+  //   console.log(error);
+  // }
+  buyMarketOrder(
+    'KRW-BTC',
+    43000000 * 0.9995,
+    '0.0001',
+    'vEGK59WVCgVL2DMsO9p4cowZQovfBP0OB6IsDRu1',
+    'xZcCPkqIMHFW6ATT2wuix3VCwBaxKeXQ7ZvTjnWa'
+  );
 };
 
 // 변동성 돌파 전략으로 매수 목표가 조회
@@ -123,13 +121,14 @@ const getCurrentPrice = async (ticker: string) => {
 };
 
 //시장가 매수
-const buyMarketOrder = async (ticker: string, price: number, accessKey: string, secretKey: string) => {
+const buyMarketOrder = async (ticker: string, price: number, volume: string, accessKey: string, secretKey: string) => {
   try {
     const body = {
       market: ticker,
       side: 'bid',
       price: price.toString(),
-      ord_type: 'price',
+      ord_type: 'limit',
+      volume,
     };
 
     const query = queryEncode(body);
@@ -153,9 +152,12 @@ const buyMarketOrder = async (ticker: string, price: number, accessKey: string, 
       json: body,
     };
 
-    return axios
+    await axios
       .request(options)
-      .then((response) => console.log(response))
+      .then((response) => {
+        console.log(response);
+        return response;
+      })
       .catch((err) => console.error(err));
   } catch (error) {
     console.error(error);

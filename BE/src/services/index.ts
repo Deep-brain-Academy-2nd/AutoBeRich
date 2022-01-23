@@ -1,4 +1,4 @@
-import UserService from './user-service';
-import TradeService from './trade-service';
+import UserService from './userService';
+import TradeService from './tradeService';
 
 export { UserService, TradeService }; // 객체 내보내기

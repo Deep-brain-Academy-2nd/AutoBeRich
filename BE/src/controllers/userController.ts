@@ -1,14 +1,13 @@
-import express, { NextFunction, Request, Response } from 'express';
-import bcrypt, { compare } from 'bcryptjs';
-import jwt, { sign } from 'jsonwebtoken';
-import { body, validationResult } from 'express-validator';
-import { IUser, IUserInputDTO } from '../interfaces/IUser';
-import { UserService } from '../services';
-import properties from '../config/properties/properties';
-import CryptoJS from 'crypto-js';
-import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
-import { TradeService } from '../services';
+import bcrypt, { compare } from 'bcryptjs';
+import CryptoJS from 'crypto-js';
+import { NextFunction, Request, Response } from 'express';
+import { validationResult } from 'express-validator';
+import jwt, { sign } from 'jsonwebtoken';
+import { v4 as uuidv4 } from 'uuid';
+import properties from '../config/properties/properties';
+import { IUser, IUserInputDTO } from '../interfaces/IUser';
+import { TradeService, UserService } from '../services';
 
 const signUp = async (req: Request, res: Response, next: NextFunction) => {
   const { name, email, password, secretKey, accessKey }: IUserInputDTO = req.body;
@@ -214,10 +213,10 @@ const accountInfo = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const updateStrategy = async (req: Request, res: Response, next: NextFunction) => {
+const updateTradingStrategy = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, strategy } = req.body;
-    await UserService.updateStrategy({ email, strategy });
+    await UserService.updateTradingStrategy({ email, strategy });
     res.status(200).json({
       status: 'success',
       code: 200,
@@ -228,13 +227,15 @@ const updateStrategy = async (req: Request, res: Response, next: NextFunction) =
   }
 };
 
-const updateStatus = async (req: Request, res: Response, next: NextFunction) => {
+const updateStatusAutoTrading = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, status } = req.body;
 
-    await UserService.updateStatus({ email, status });
+    // 자동 매매 상태 변경
+    await UserService.updateStatusAutoTrading({ email, status });
 
-    const result = await TradeService.tradeStating({ email });
+    // // 자동 매매 시작
+    // startAutoTrading(email);
 
     res.status(200).json({
       status: 'success',
@@ -246,11 +247,29 @@ const updateStatus = async (req: Request, res: Response, next: NextFunction) => 
   }
 };
 
+const startAutoTrading = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email } = req.body;
+
+    // 자동 매매 시작
+    const result = await TradeService.tradeStating({ email });
+    console.log(result);
+    res.status(200).json({
+      status: 'success',
+      code: 200,
+      msg: 'start auto trading',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export default {
   signUp,
   logIn,
   verifyToken,
   accountInfo,
-  updateStrategy,
-  updateStatus,
+  updateTradingStrategy,
+  updateStatusAutoTrading,
+  startAutoTrading,
 };
