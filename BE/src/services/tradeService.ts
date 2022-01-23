@@ -4,14 +4,15 @@ import CryptoJS from 'crypto-js';
 import { sign } from 'jsonwebtoken';
 import { QuoationService } from 'node-upbit';
 import { encode as queryEncode } from 'querystring';
+import rp from 'request-promise';
 import { v4 as uuidv4 } from 'uuid';
 import properties from '../config/properties/properties';
+import { IAccount } from '../interfaces/IAccount';
 import { IUser, userUniqueSearchInput } from '../interfaces/IUser';
 import UserService from './userService';
 
 const tradeStating = async (data: userUniqueSearchInput) => {
-  // const { email } = data;
-  const email = 'dongwon@likelion.org';
+  const { email } = data;
   const user: IUser | null = await UserService.findEmail({ email });
   // @ts-ignore
   const { secretKey, accessKey, strategy, status }: IUser = user;
@@ -22,44 +23,37 @@ const tradeStating = async (data: userUniqueSearchInput) => {
   const tmp = CryptoJS.AES.decrypt(secretKey, properties.upbitEncryptKey);
   const decryptedSecretKey = tmp.toString(CryptoJS.enc.Utf8);
 
-  // try {
-  //   const now = new Date();
-  //   const startTime = await getStartTime('KRW-BTC');
-  //   const endTime = addDays(now, 1).getTime();
-  //   const endTimeTenSeconds = addSeconds(new Date(endTime), -10).getTime();
+  try {
+    const now = new Date();
+    const startTime = await getStartTime('KRW-BTC');
+    const endTime = addDays(now, 1).getTime();
+    const endTimeTenSeconds = addSeconds(new Date(endTime), -10).getTime();
 
-  //   if (startTime < now.getTime() && now.getTime() < endTimeTenSeconds) {
-  //     const targetPrice = await getTargetPrice('KRW-BTC', 0.5);
-  //     const currentPrice = await getCurrentPrice('KRW-BTC');
-  //     if (targetPrice < currentPrice) {
-  //       const balances = await getBalance(decryptedAccessKey, decryptedSecretKey);
-  //       const krw = balances.find((item: IAccount) => {
-  //         return item.currency === 'KRW';
-  //       });
-  //       if (krw.balance > 5000) {
-  //         buyMarketOrder('KRW-BTC', krw * 0.9995, decryptedAccessKey, decryptedSecretKey);
-  //       }
-  //     }
-  //   } else {
-  //     const balances = await getBalance(decryptedAccessKey, decryptedSecretKey);
-  //     const btc = balances.find((item: IAccount) => {
-  //       return item.currency === 'BTC';
-  //     });
+    if (startTime < now.getTime() && now.getTime() < endTimeTenSeconds) {
+      const targetPrice = await getTargetPrice('KRW-BTC', 0.5);
+      const currentPrice = await getCurrentPrice('KRW-BTC');
+      if (targetPrice < currentPrice) {
+        const balances = await getBalance(decryptedAccessKey, decryptedSecretKey);
+        const krw = balances.find((item: IAccount) => {
+          return item.currency === 'KRW';
+        });
+        if (krw.balance > 5000) {
+          buyMarketOrder('KRW-BTC', krw * 0.9995, decryptedAccessKey, decryptedSecretKey);
+        }
+      }
+    } else {
+      const balances = await getBalance(decryptedAccessKey, decryptedSecretKey);
+      const btc = balances.find((item: IAccount) => {
+        return item.currency === 'BTC';
+      });
 
-  //     if (btc.balance > 0.00008) {
-  //       await sellMarketOrder('KRW-BTC', btc.balance * 0.9995, decryptedAccessKey, decryptedSecretKey);
-  //     }
-  //   }
-  // } catch (error) {
-  //   console.log(error);
-  // }
-  buyMarketOrder(
-    'KRW-BTC',
-    43000000 * 0.9995,
-    '0.0001',
-    'vEGK59WVCgVL2DMsO9p4cowZQovfBP0OB6IsDRu1',
-    'xZcCPkqIMHFW6ATT2wuix3VCwBaxKeXQ7ZvTjnWa'
-  );
+      if (btc.balance > 0.00008) {
+        await sellMarketOrder('KRW-BTC', btc.balance * 0.9995, decryptedAccessKey, decryptedSecretKey);
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 // 변동성 돌파 전략으로 매수 목표가 조회
@@ -121,14 +115,13 @@ const getCurrentPrice = async (ticker: string) => {
 };
 
 //시장가 매수
-const buyMarketOrder = async (ticker: string, price: number, volume: string, accessKey: string, secretKey: string) => {
+const buyMarketOrder = async (ticker: string, price: number, accessKey: string, secretKey: string) => {
   try {
     const body = {
       market: ticker,
       side: 'bid',
       price: price.toString(),
-      ord_type: 'limit',
-      volume,
+      ord_type: 'price',
     };
 
     const query = queryEncode(body);
@@ -151,14 +144,13 @@ const buyMarketOrder = async (ticker: string, price: number, volume: string, acc
       headers: { Authorization: `Bearer ${token}` },
       json: body,
     };
-
-    await axios
-      .request(options)
-      .then((response) => {
-        console.log(response);
-        return response;
-      })
-      .catch((err) => console.error(err));
+    let result: any = {};
+    try {
+      result = await rp(options);
+    } catch (error) {
+      console.error(error);
+    }
+    return result;
   } catch (error) {
     console.error(error);
   }
