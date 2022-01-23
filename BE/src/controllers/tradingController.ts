@@ -18,9 +18,9 @@ const changeResponse = async (data: any) => {
       name: string; // coin name
       currency: string; // coin flag
       avgBuyPrice: string; // 매수 평균가
-      currentMoney: number; // 총 매수 금액
-      tradePrice: number; // 해당 코인 현재가
-      volume: string; // 코인 보유수량
+      entryPrice: number; // 총 매수 금액
+      currentTradePrice: number; // 해당 코인 현재가
+      quantity: string; // 코인 보유수량
       currentValuePrice: number; // 평가 금액
       earningRate: number; // 수익률
     };
@@ -36,8 +36,8 @@ const changeResponse = async (data: any) => {
     temp['name'] = data[i]['currency'];
     temp['currency'] = data[i]['unit_currency'] + '-' + data[i]['currency'];
     temp['avgBuyPrice'] = data[i]['avg_buy_price'];
-    temp['volume'] = data[i]['balance'];
-    temp['currentMoney'] = parseFloat(data[i]['balance']) * parseFloat(data[i]['avg_buy_price']);
+    temp['quantity'] = data[i]['balance'];
+    temp['entryPrice'] = parseFloat(data[i]['balance']) * parseFloat(data[i]['avg_buy_price']);
     coinList[temp['currency']] = temp;
   }
   const coinArr = Object.keys(coinList);
@@ -46,9 +46,9 @@ const changeResponse = async (data: any) => {
     const currentPrice: any = await getCurrentCoinInfos(coinArr[i]);
     coinList[coinArr[i]]['trade_price'] = currentPrice[0]['trade_price'];
     coinList[coinArr[i]]['currentValuePrice'] =
-      currentPrice[0]['trade_price'] * parseFloat(coinList[coinArr[i]]['volume']);
+      currentPrice[0]['trade_price'] * parseFloat(coinList[coinArr[i]]['quantity']);
     coinList[coinArr[i]]['earningRate'] = (
-      (coinList[coinArr[i]]['currentValuePrice'] / parseFloat(coinList[coinArr[i]]['currentMoney']) - 1) *
+      (coinList[coinArr[i]]['currentValuePrice'] / parseFloat(coinList[coinArr[i]]['entryPrice']) - 1) *
       100
     ).toFixed(2);
   }
@@ -85,8 +85,9 @@ const getCurrentCoinInfos = (name: string) => {
 
 const getMyUpbitAccountInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // const { email }: any = req.query;
-    const email = 'dongwon@likelion.org';
+    const { email }: any = req.query;
+    // const email = 'dongwon@likelion.org';
+
     const user: any = await UserService.findEmail({ email });
 
     const { secretKey, accessKey, strategy }: any = user;
@@ -115,7 +116,7 @@ const getMyUpbitAccountInfo = async (req: Request, res: Response, next: NextFunc
         res.status(200).json({
           upbit_accounts: response.data,
           coinInfo,
-          strategy: strategy,
+          strategy,
           status: 'success',
           code: 200,
           msg: 'Get Upbit account information successfully.',
