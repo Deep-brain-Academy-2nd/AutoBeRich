@@ -56,7 +56,7 @@ const tradeStating = async (data: userUniqueSearchInput) => {
       });
 
       if (btc.balance > 0.00008) {
-        await sellMarketOrder('KRW-BTC', btc * 0.9995, decryptedAccessKey, decryptedSecretKey);
+        await sellMarketOrder('KRW-BTC', btc.balance * 0.9995, decryptedAccessKey, decryptedSecretKey);
       }
     }
   } catch (error) {
@@ -202,17 +202,17 @@ const sellMarketOrder = async (ticker: string, volume: number, accessKey: string
   }
 };
 
-const addDays = (date:Date , days: number) => {
-  var result = new Date(date);
+const addDays = (date: Date, days: number) => {
+  const result = new Date(date);
   result.setDate(result.getDate() + days);
   return result;
-}
+};
 
-const addSeconds = (date:Date , seconds: number) => {
-  var result = new Date(date);
+const addSeconds = (date: Date, seconds: number) => {
+  const result = new Date(date);
   result.setSeconds(result.getSeconds() + seconds);
   return result;
-}
+};
 
 export default {
   tradeStating,
