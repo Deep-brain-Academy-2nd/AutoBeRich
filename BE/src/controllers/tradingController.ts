@@ -5,6 +5,7 @@ import properties from '../config/properties/properties';
 import CryptoJS from 'crypto-js';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
+import { TradeService } from '../services';
 
 const changeResponse = async (data: any) => {
   interface resultType {
@@ -132,6 +133,12 @@ const getMyUpbitAccountInfo = async (req: Request, res: Response, next: NextFunc
   } catch (err) {
     next(err);
   }
+};
+
+export const purchaseCoin = async (req: Request, res: Response, next: NextFunction) => {
+  //   const { email, status } = req.body;
+  const email = 'dongwon@likelion.org';
+  const result = await TradeService.tradeStating({ email });
 };
 
 export default getMyUpbitAccountInfo;
