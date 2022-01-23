@@ -1,11 +1,10 @@
+import axios from 'axios';
+import CryptoJS from 'crypto-js';
 import { NextFunction, Request, Response } from 'express';
 import { sign } from 'jsonwebtoken';
-import { UserService } from '../services';
-import properties from '../config/properties/properties';
-import CryptoJS from 'crypto-js';
 import { v4 as uuidv4 } from 'uuid';
-import axios from 'axios';
-import { TradeService } from '../services';
+import properties from '../config/properties/properties';
+import { UserService } from '../services';
 
 const changeResponse = async (data: any) => {
   interface resultType {
@@ -135,10 +134,6 @@ const getMyUpbitAccountInfo = async (req: Request, res: Response, next: NextFunc
   }
 };
 
-export const purchaseCoin = async (req: Request, res: Response, next: NextFunction) => {
-  //   const { email, status } = req.body;
-  const email = 'dongwon@likelion.org';
-  const result = await TradeService.tradeStating({ email });
+export default {
+  getMyUpbitAccountInfo,
 };
-
-export default getMyUpbitAccountInfo;

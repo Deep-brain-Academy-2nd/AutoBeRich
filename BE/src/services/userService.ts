@@ -14,7 +14,7 @@ const findEmail = (data: userUniqueSearchInput) => {
   return result;
 };
 
-const updateStrategy = async (data: userUniqueSearchInput) => {
+const updateTradingStrategy = async (data: userUniqueSearchInput) => {
   try {
     const { email, strategy } = data;
     const result = await User.findOneAndUpdate({ email }, { $set: { strategy } });
@@ -23,7 +23,7 @@ const updateStrategy = async (data: userUniqueSearchInput) => {
   }
 };
 
-const updateStatus = async (data: userUniqueSearchInput) => {
+const updateStatusAutoTrading = async (data: userUniqueSearchInput) => {
   try {
     const { email, status } = data;
     const result = await User.findOneAndUpdate({ email }, { $set: { status } });
@@ -35,6 +35,6 @@ const updateStatus = async (data: userUniqueSearchInput) => {
 export default {
   createUser,
   findEmail,
-  updateStrategy,
-  updateStatus,
+  updateTradingStrategy,
+  updateStatusAutoTrading,
 };
