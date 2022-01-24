@@ -252,7 +252,7 @@ const startAutoTrading = async (req: Request, res: Response, next: NextFunction)
     const { email } = req.body;
 
     // 자동 매매 시작
-    const result = await TradeService.tradeStating({ email });
+    await TradeService.tradeStating({ email });
 
     res.status(200).json({
       status: 'success',
