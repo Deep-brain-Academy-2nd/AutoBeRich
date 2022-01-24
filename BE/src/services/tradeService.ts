@@ -1,60 +1,79 @@
-import User from '../models/User';
-import UserService from './user-service';
-import { ExchangeService, QuoationService } from 'node-upbit';
-import properties from '../config/properties/properties';
-import { IUser, userUniqueSearchInput } from '../interfaces/IUser';
-import CryptoJS from 'crypto-js';
-import { v4 as uuidv4 } from 'uuid';
-import { sign } from 'jsonwebtoken';
-import axios, { AxiosRequestConfig } from 'axios';
-import { IAccount } from '../interfaces/IAccount';
-import { encode as queryEncode } from 'querystring';
 import crypto from 'crypto';
+import CryptoJS from 'crypto-js';
+import { sign } from 'jsonwebtoken';
+import { QuoationService } from 'node-upbit';
+import { encode as queryEncode } from 'querystring';
+import rp from 'request-promise';
+import { v4 as uuidv4 } from 'uuid';
+import properties from '../config/properties/properties';
+import { IAccount } from '../interfaces/IAccount';
+import { IUser, userUniqueSearchInput } from '../interfaces/IUser';
+import UserService from './userService';
 
 const tradeStating = async (data: userUniqueSearchInput) => {
+  // 로그인하고 코인 구매가 가능한 정보 가져오기 :: 2022-01-14 dongwon
   const { email } = data;
   const user: IUser | null = await UserService.findEmail({ email });
   // @ts-ignore
-  const { secretKey, accessKey, strategy, status }: IUser = user;
-  // @ts-ignore
+  const { secretKey, accessKey, status }: IUser = user;
   const bytes = CryptoJS.AES.decrypt(accessKey, properties.upbitEncryptKey);
   const decryptedAccessKey = bytes.toString(CryptoJS.enc.Utf8);
-  // @ts-ignore
   const tmp = CryptoJS.AES.decrypt(secretKey, properties.upbitEncryptKey);
   const decryptedSecretKey = tmp.toString(CryptoJS.enc.Utf8);
 
-  //const targetPrice = await getTargetPrice('KRW-BTC', 0.5);
-  //const startTime = await getStartTime('KRW-BTC');
-  //const balances = await getBalance(decryptedAccessKey, decryptedSecretKey);
-  /*const krw = balances.find((item: IAccount) => {
-    return item.currency === 'KRW';
-  });*/
-  //const currentPrice = await getCurrentPrice('KRW-BTC');
+  // 자동 매매 시작 :: 2022-01-24 dongwon
+  function timer() {
+    setTimeout(async () => {
+      const user: IUser | null = await UserService.findEmail({ email });
+      // @ts-ignore
+      const { status }: IUser = user;
+      if (status) {
+        autoTrading(decryptedAccessKey, decryptedSecretKey);
+        timer();
+      }
+    }, 5000);
+  }
+  if (status) {
+    timer();
+  }
+};
 
+// 자동 매매 함수 분리 :: 2022-01-24 dongwon
+const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: string) => {
   try {
-    const now = new Date();
-    const startTime = await getStartTime('KRW-BTC');
-    const endTime = addDays(now, 1).getTime();
+    // ***** 테스트 위해서 여기 시간조정 getStartTime, getTime, addSeconds 등으로 가서 조절 :: dongwon
+    const now = new Date(); // 현재시간
+    const startTime = await getStartTime('KRW-BTC'); // 시작시간 9시
+    const endTime = addDays(now, 1).getTime(); // 끝나는 시간 9시 + 1일
     const endTimeTenSeconds = addSeconds(new Date(endTime), -10).getTime();
 
+    // 9시 < 현재 < 8:59:50 매수 :: 2022-01-24 dongwon
     if (startTime < now.getTime() && now.getTime() < endTimeTenSeconds) {
-      const targetPrice = await getTargetPrice('KRW-BTC', 0.5);
-      const currentPrice = await getCurrentPrice('KRW-BTC');
+      // 임시로 k값 0.5로 고정했으나 최적의 k값을 찾기 위한 함수 작성 요망 :: 2022-01-24 dongwon
+      const targetPrice = await getTargetPrice('KRW-BTC', 0.5); // 매수 목표가 설정
+      const currentPrice = await getCurrentPrice('KRW-BTC'); // 현재 가격
+      // 현재가격이 매수 목표가 보다 높을시 매수
       if (targetPrice < currentPrice) {
+        // 계좌 조회
         const balances = await getBalance(decryptedAccessKey, decryptedSecretKey);
+        // 보유 원화 조회
         const krw = balances.find((item: IAccount) => {
           return item.currency === 'KRW';
         });
+        // 5천원 이상이면 매수
         if (krw.balance > 5000) {
+          // 수수료 0.0005%라 남겨두고 구매
           buyMarketOrder('KRW-BTC', krw * 0.9995, decryptedAccessKey, decryptedSecretKey);
         }
       }
-    } else {
+    }
+    // 매도
+    else {
       const balances = await getBalance(decryptedAccessKey, decryptedSecretKey);
       const btc = balances.find((item: IAccount) => {
         return item.currency === 'BTC';
       });
-
+      // 5천원이상이면 매도. 현재 비트코인 가격상 0.00008이 5천원임. :: 2022-01-24 dongwon
       if (btc.balance > 0.00008) {
         await sellMarketOrder('KRW-BTC', btc.balance * 0.9995, decryptedAccessKey, decryptedSecretKey);
       }
@@ -72,15 +91,15 @@ const getTargetPrice = async (ticker: string, k: number) => {
     marketCoin: ticker,
     count: 2,
   });
-
-  const targetPrice = df[0].prev_closing_price + (df[0].high_price = df[0].low_price) * k;
+  // 이전 종가보다 현재 낙폭이 *k배가 목표 가격.
+  const targetPrice = df[0].prev_closing_price + (df[0].high_price - df[0].low_price) * k;
   return targetPrice;
 };
 
 // 시작 시간 조회
 const getStartTime = async (ticker: string) => {
   const quoationService = new QuoationService();
-
+  // getDayCandles로 조회하면 시작시간이 9시임 :: 2022-01-24 dongwon
   const df = await quoationService.getDayCandles({
     marketCoin: ticker,
     count: 1,
@@ -98,19 +117,14 @@ const getBalance = async (decryptedAccessKey: string, decryptedSecretKey: string
   };
 
   const token = sign(payload, decryptedSecretKey);
-  const options: AxiosRequestConfig = {
+  const options: any = {
     method: 'GET',
     url: 'https://api.upbit.com/v1/accounts',
     headers: { Authorization: `Bearer ${token}` },
   };
-
-  return axios
-    .request(options)
-    .then((response) => {
-      const balances = response.data;
-      return balances;
-    })
-    .catch((err) => console.error(err));
+  let result: any = {};
+  result = rp(options);
+  return result;
 };
 
 //현재가 조회
@@ -152,11 +166,13 @@ const buyMarketOrder = async (ticker: string, price: number, accessKey: string, 
       headers: { Authorization: `Bearer ${token}` },
       json: body,
     };
-
-    return axios
-      .request(options)
-      .then((response) => console.log(response))
-      .catch((err) => console.error(err));
+    let result: any = {};
+    try {
+      result = await rp(options);
+    } catch (error) {
+      console.error(error);
+    }
+    return result;
   } catch (error) {
     console.error(error);
   }
@@ -193,10 +209,13 @@ const sellMarketOrder = async (ticker: string, volume: number, accessKey: string
       json: body,
     };
 
-    return axios
-      .request(options)
-      .then((response) => console.log(response))
-      .catch((err) => console.error(err));
+    let result: any = {};
+    try {
+      result = await rp(options);
+    } catch (error) {
+      console.error(error);
+    }
+    return result;
   } catch (error) {
     console.error(error);
   }

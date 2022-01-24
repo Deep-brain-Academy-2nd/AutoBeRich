@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import getMyUpbitAccountInfo from '../controllers/tradingController';
-
+import { TradingController, UserController } from '../controllers';
 const router = Router();
 
-router.get('/getUserInfo', getMyUpbitAccountInfo);
+router.get('/getUserInfo', TradingController.getMyUpbitAccountInfo); // 계좌, 보유 코인 조회
+router.put('/updateTradingStrategy', UserController.updateTradingStrategy); // 매매 전략 바꾸기
+router.post('/statusAutoTrading', UserController.startAutoTrading); // 자동매매 시작,중지
 
 export default router;
