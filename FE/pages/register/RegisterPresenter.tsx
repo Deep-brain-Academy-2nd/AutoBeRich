@@ -22,7 +22,7 @@ const RegisterMain = styled.div`
   flex-direction: column;
   background-image: url('/images/background.png');
 `;
-const RegisterPresenter = ({ handleSubmit }) => {
+const RegisterPresenter = ({ handleSubmit }: { handleSubmit: any }) => {
   const theme = createTheme({
     typography: {
       // In Chinese and Japanese the characters are usually larger,

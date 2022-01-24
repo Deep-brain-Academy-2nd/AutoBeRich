@@ -25,8 +25,10 @@ const store = () =>
 export const wrapper = createWrapper(store, {
   debug: process.env.NODE_ENV !== 'production',
 });
-export type AppDispatch = typeof store.dispatch;
-export type RootState = ReturnType<typeof store.getState>;
+// export type AppDispatch = typeof store.dispatch;
+// export type RootState = ReturnType<typeof store.getState>;
+export type RootState = ReturnType<typeof store>;
+export type AppDispatch = ReturnType<typeof store>['dispatch'];
 export type AppThunk<ReturnType = void> = ThunkAction<
   ReturnType,
   RootState,

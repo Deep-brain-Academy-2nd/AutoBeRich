@@ -23,7 +23,7 @@ const LoginMain = styled.div`
   background-image: url('/images/background.png');
 `;
 
-function LoginPresenter({ handleSubmit }) {
+function LoginPresenter({ handleSubmit }: { handleSubmit: any }) {
   const theme = createTheme({
     typography: {
       // In Chinese and Japanese the characters are usually larger,

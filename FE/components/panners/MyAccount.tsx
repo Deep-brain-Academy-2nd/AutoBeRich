@@ -10,11 +10,15 @@ const MyAccountWrap = Styled.div`
     overflow: scroll;
 `;
 
-const accountInfos = Styled.ul`
-  
-`;
-
-const MyAccount = ({ userInfo, krwInfo, strategy }) => {
+const MyAccount = ({
+  userInfo,
+  krwInfo,
+  strategy,
+}: {
+  userInfo: any;
+  krwInfo: any;
+  strategy: any;
+}) => {
   return (
     <MyAccountWrap>
       <ul>

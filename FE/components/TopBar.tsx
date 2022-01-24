@@ -16,7 +16,7 @@ const NavBar = styled.nav`
 `;
 
 const TopBar = () => {
-  const info: any = useAppSelector(selectInfo);
+  // const info: any = useAppSelector(selectInfo);
   const [name, setName] = useState('');
   useEffect(() => {
     const localStorageName = localStorage.getItem('name');

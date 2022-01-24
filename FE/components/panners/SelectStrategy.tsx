@@ -20,6 +20,10 @@ const SelectStrategy = ({
   propsStrategy,
   changeStrategy,
   changeTradingStatus,
+}: {
+  propsStrategy: any;
+  changeStrategy: any;
+  changeTradingStatus: any;
 }) => {
   const [strategy, setStrategy] = useState('');
   const handleChange = (event: any) => {

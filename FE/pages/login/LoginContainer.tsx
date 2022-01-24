@@ -34,7 +34,7 @@ const LoginContainer = () => {
       } else {
         alert('login 실패');
       }
-    } catch (error) {
+    } catch (error: any) {
       if (error.message.indexOf('401')) {
         alert('아이디가 없습니다. 가입 후 진행해주세요.');
         return;
