@@ -10,7 +10,6 @@ const registerAPI = {
   register: (obj: Data) => {
     API.post('users/signup', obj)
       .then((res: any) => {
-        console.log(res);
         return res;
       })
       .catch((err) => {

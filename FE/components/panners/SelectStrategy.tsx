@@ -34,9 +34,6 @@ const SelectStrategy = ({
       setStrategy('Changing_Trading');
     }
   };
-  useEffect(() => {
-    console.log(propsStrategy, 'propsStrategy');
-  }, []);
   return (
     <SelectStrategyWrap>
       <FormControl

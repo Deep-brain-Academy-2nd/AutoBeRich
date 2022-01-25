@@ -8,10 +8,6 @@ const SelectStrategyContainer = () => {
   useEffect(() => {
     getAccountInfos();
   }, []);
-  const getAccountInfos = async () => {
-    // const res = await API.get('/users');
-    // console.log(res);
-  };
   const changeStrategy = async (chooseStrategy: string) => {
     if (chooseStrategy === 'Changing_Trading') {
       const res = await API.put('/trading/updateTradingStrategy', {
@@ -22,7 +18,6 @@ const SelectStrategyContainer = () => {
         alert('변경완료');
         setStrategy(res.data);
       } else {
-        console.log(res.data, '변경실패');
         alert('변경 실패하였습니다.');
       }
     } else {

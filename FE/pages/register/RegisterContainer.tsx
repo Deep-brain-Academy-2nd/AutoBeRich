@@ -45,11 +45,6 @@ const RegisterContainer = () => {
         secretKey: e.currentTarget.secretKey.value,
       };
 
-      // const result = registerAPI.register(body);
-      // console.log(result);
-      // if (res.status === 200){
-      //   Router.replace('/')
-      // }
       const res: any = await API.post('users/signup', body);
 
       if (res.data.code === 200) {

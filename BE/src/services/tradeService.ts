@@ -146,9 +146,6 @@ const getCurrentPrice = async (ticker: string) => {
 //시장가 매수
 const buyMarketOrder = async (ticker: string, price: number, accessKey: string, secretKey: string) => {
   try {
-    console.log(typeof price.toString());
-    console.log('price.toString()  ======== ' + price.toString());
-    console.log('price ======== ' + price);
     const body = {
       market: ticker,
       side: 'bid',

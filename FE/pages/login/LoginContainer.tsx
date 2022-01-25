@@ -20,7 +20,6 @@ const LoginContainer = () => {
         password: e.currentTarget.password.value,
       };
       const res: any = await API.post('users/login', body);
-      // const res: any = loginAPI.login(body).then((re) => console.log(re));
 
       if (res.data.code === 200) {
         const token = res.data.token,
