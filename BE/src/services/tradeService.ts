@@ -9,6 +9,7 @@ import properties from '../config/properties/properties';
 import { IAccount } from '../interfaces/IAccount';
 import { IUser, userUniqueSearchInput } from '../interfaces/IUser';
 import UserService from './userService';
+import axios from "axios";
 
 const tradeStating = async (data: userUniqueSearchInput) => {
   // 로그인하고 코인 구매가 가능한 정보 가져오기 :: 2022-01-14 dongwon
@@ -28,8 +29,7 @@ const tradeStating = async (data: userUniqueSearchInput) => {
       // @ts-ignore
       const { status }: IUser = user;
       if (status) {
-        //autoTrading(decryptedAccessKey, decryptedSecretKey);
-        buyMarketOrder('KRW-BTC', 10000 * 0.9995, decryptedAccessKey, decryptedSecretKey);
+        autoTrading(decryptedAccessKey, decryptedSecretKey);
         timer();
       }
     }, 5000);
@@ -64,7 +64,7 @@ const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: strin
         // 5천원 이상이면 매수
         if (krw.balance > 5000) {
           // 수수료 0.0005%라 남겨두고 구매
-          buyMarketOrder('KRW-BTC', krw * 0.9995, decryptedAccessKey, decryptedSecretKey);
+          buyMarketOrder('KRW-BTC', krw.balance * 0.9995, decryptedAccessKey, decryptedSecretKey);
         }
       }
     }
@@ -123,9 +123,14 @@ const getBalance = async (decryptedAccessKey: string, decryptedSecretKey: string
     url: 'https://api.upbit.com/v1/accounts',
     headers: { Authorization: `Bearer ${token}` },
   };
-  let result: any = {};
-  result = rp(options);
-  return result;
+
+  return axios
+    .request(options)
+    .then((response) => {
+      const balances = response.data;
+      return balances;
+    })
+    .catch((err) => console.error(err));
 };
 
 //현재가 조회
