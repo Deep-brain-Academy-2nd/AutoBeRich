@@ -38,10 +38,17 @@ class MyDocument extends Document {
       <Html>
         <Head>
           <meta charSet="utf-8" />
-          <link rel="shortcut icon" href="/favicon.svg" type="image/svg" />
-          <meta property="og:title" content="" />
-          <meta property="og:image" content="" />
-          <meta property="og:description" content="" />
+          <link
+            rel="shortcut icon"
+            href="https://cdn.zeplin.io/61e6808d75d48685ab7b031e/assets/B4CE3F88-F529-452A-A63C-6197976305D4.png"
+            type="image/png"
+          />
+          <meta property="og:title" content="AutoBeRich" />
+          <meta
+            property="og:image"
+            content="https://cdn.zeplin.io/61e6808d75d48685ab7b031e/assets/B4CE3F88-F529-452A-A63C-6197976305D4.png"
+          />
+          <meta property="og:description" content="AutoTrading service" />
           <meta property="og:url" content="//" />
           <meta name="description" content="" />
           <meta name="keywords" content="" />

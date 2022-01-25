@@ -5,9 +5,6 @@ import SelectStrategy from './SelectStrategy';
 
 const SelectStrategyContainer = () => {
   const [strategy, setStrategy] = useState('');
-  useEffect(() => {
-    getAccountInfos();
-  }, []);
   const changeStrategy = async (chooseStrategy: string) => {
     if (chooseStrategy === 'Changing_Trading') {
       const res = await API.put('/trading/updateTradingStrategy', {
@@ -18,6 +15,7 @@ const SelectStrategyContainer = () => {
         alert('변경완료');
         setStrategy(res.data);
       } else {
+        console.log(res.data, '변경실패');
         alert('변경 실패하였습니다.');
       }
     } else {
