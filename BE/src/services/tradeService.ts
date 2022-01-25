@@ -46,7 +46,7 @@ const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: strin
     // ***** 테스트 위해서 여기 시간조정 getStartTime, getTime, addSeconds 등으로 가서 조절 :: dongwon
     const now = new Date(); // 현재시간
     const startTime = await getStartTime('KRW-BTC'); // 시작시간 9시
-    const endTime = addDays(now, 1).getTime(); // 끝나는 시간 9시 + 1일
+    const endTime = addDays(new Date(startTime), 1).getTime(); // 끝나는 시간 9시 + 1일
     const endTimeTenSeconds = addSeconds(new Date(endTime), -10).getTime();
 
     // 9시 < 현재 < 8:59:50 매수 :: 2022-01-24 dongwon
@@ -107,7 +107,7 @@ const getStartTime = async (ticker: string) => {
     count: 1,
   });
 
-  const startTime = df[0].timestamp;
+  const startTime = new Date(df[0].candle_date_time_utc).getTime();
   return startTime;
 };
 

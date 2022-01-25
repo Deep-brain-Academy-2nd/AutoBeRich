@@ -1,3 +1,4 @@
+import { NextRequest } from 'next/server';
 import React, { useState, useEffect } from 'react';
 import API from '../../apis';
 import SelectStrategy from './SelectStrategy';
@@ -13,7 +14,7 @@ const SelectStrategyContainer = () => {
   };
   const changeStrategy = async (chooseStrategy: string) => {
     if (chooseStrategy === 'Changing_Trading') {
-      const res = await API.put('/users/strategy', {
+      const res = await API.put('/trading/updateTradingStrategy', {
         email: localStorage.getItem('email'),
         strategy: chooseStrategy,
       });
@@ -31,7 +32,14 @@ const SelectStrategyContainer = () => {
   };
   const changeTradingStatus = async (status: boolean) => {
     try {
-      const res = await API.post('/users/trading_status', status);
+      const req: {
+        status: boolean;
+        email: string | null;
+      } = {
+        status,
+        email: localStorage.getItem('email'),
+      };
+      const res = await API.post('/trading/updateStatusAutoTraiding', req);
       if (res.data.message === 'Change_status_true') {
         alert('자동 매매가 시작됩니다');
       } else if (res.data.message === 'Change_status_false') {
