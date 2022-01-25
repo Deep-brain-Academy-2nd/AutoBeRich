@@ -32,11 +32,27 @@ const SelectStrategyContainer = () => {
         status,
         email: localStorage.getItem('email'),
       };
-      const res = await API.post('/trading/updateStatusAutoTraiding', req);
-      if (res.data.message === 'Change_status_true') {
-        alert('자동 매매가 시작됩니다');
-      } else if (res.data.message === 'Change_status_false') {
-        alert('자동 매매가 중지됩니다.');
+      if (confirm('click하시면 확인을 클릭하시면 자동매매가 시작됩니다.')) {
+        const res = await API.post('/trading/updateStatusAutoTraiding', req);
+        if (status) {
+          if (res.data.code === 200) {
+            alert('자동 매매가 시작하였습니다.');
+          } else {
+            alert(
+              '자동 매매 시작을 하지 못하였습니다. 잠시 후 다시 시도해주세요.'
+            );
+          }
+        }
+      } else if (
+        confirm('click하시면 확인을 클릭하시면 자동매매가 종료됩니다.') &&
+        !status
+      ) {
+        const res = await API.post('/trading/updateStatusAutoTraiding', req);
+        if (res.data.code === 200) {
+          alert('자동 매매가 중지됩니다.');
+        } else {
+          alert('자동 매매 중지에 실패하였습니다. 잠시 후 다시 시도해주세요.');
+        }
       }
     } catch (error) {
       alert('매매 선택이 실패하였습니다.');
