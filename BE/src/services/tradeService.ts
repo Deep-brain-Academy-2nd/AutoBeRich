@@ -9,12 +9,13 @@ import properties from '../config/properties/properties';
 import { IAccount } from '../interfaces/IAccount';
 import { IUser, userUniqueSearchInput } from '../interfaces/IUser';
 import UserService from './userService';
-import axios from "axios";
+import axios from 'axios';
 
-const tradeStating = async (data: userUniqueSearchInput) => {
+const autoTradingStart = async (data: userUniqueSearchInput) => {
   // 로그인하고 코인 구매가 가능한 정보 가져오기 :: 2022-01-14 dongwon
   const { email } = data;
   const user: IUser | null = await UserService.findEmail({ email });
+
   // @ts-ignore
   const { secretKey, accessKey, status }: IUser = user;
   const bytes = CryptoJS.AES.decrypt(accessKey, properties.upbitEncryptKey);
@@ -243,5 +244,5 @@ const addSeconds = (date: Date, seconds: number) => {
 };
 
 export default {
-  tradeStating,
+  autoTradingStart,
 };

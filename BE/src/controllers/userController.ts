@@ -226,7 +226,7 @@ const updateTradingStrategy = async (req: Request, res: Response, next: NextFunc
     next(err);
   }
 };
-
+/*
 const updateStatusAutoTrading = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, status } = req.body;
@@ -246,13 +246,14 @@ const updateStatusAutoTrading = async (req: Request, res: Response, next: NextFu
     next(err);
   }
 };
-
-const startAutoTrading = async (req: Request, res: Response, next: NextFunction) => {
+*/
+const updateStatusAutoTraiding = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { email } = req.body;
+    const { email, status } = req.body;
 
+    await UserService.updateStatusAutoTrading({ email, status });
     // 자동 매매 시작
-    await TradeService.tradeStating({ email });
+    await TradeService.autoTradingStart({ email, status });
 
     res.status(200).json({
       status: 'success',
@@ -270,6 +271,5 @@ export default {
   verifyToken,
   accountInfo,
   updateTradingStrategy,
-  updateStatusAutoTrading,
-  startAutoTrading,
+  updateStatusAutoTraiding,
 };
