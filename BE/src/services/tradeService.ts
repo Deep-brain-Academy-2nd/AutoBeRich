@@ -49,7 +49,6 @@ const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: strin
     const endTime = addDays(now, 1).getTime(); // 끝나는 시간 9시 + 1일
     const endTimeTenSeconds = addSeconds(new Date(endTime), -10).getTime();
 
-    console.log(now.getTime());
     // 9시 < 현재 < 8:59:50 매수 :: 2022-01-24 dongwon
     if (startTime < now.getTime() && now.getTime() < endTimeTenSeconds) {
       // 임시로 k값 0.5로 고정했으나 최적의 k값을 찾기 위한 함수 작성 요망 :: 2022-01-24 dongwon
