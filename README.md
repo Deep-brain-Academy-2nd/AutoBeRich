@@ -25,6 +25,7 @@ Website[http://52.91.234.69:3000/]
 [![webpack Badge](https://img.shields.io/badge/webpack-8DD6F9?style=flat-square&logo=webpack&logoColor=white)]()
 [![babel Badge](https://img.shields.io/badge/babel-F9DC3E?style=flat-square&logo=babel&logoColor=black)]()
 ![ESLint](https://img.shields.io/badge/ESLint-4B3263?style=flat-square&logo=styled-components&logoColor=white)
+![Yarn](https://img.shields.io/badge/yarn-%232C8EBB.svg?style=flat-square&logo=styled-components&logoColor=white)
 
 ### BE
 
@@ -35,6 +36,11 @@ Website[http://52.91.234.69:3000/]
 [![AWS Badge](https://img.shields.io/badge/AmazonAWS-232F3E?style=flat-square&logo=Amazon%20AWS&logoColor=white)]()
 [![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=flat-square&logo=docker&logoColor=white)]()
 [![ESLint](https://img.shields.io/badge/ESLint-4B3263?style=flat-square&logo=eslint&logoColor=white)]()
+
+### 협업전략
+
+![Slack](https://img.shields.io/badge/Slack-4A154B?style=flat-square&logo=eslint&logoColor=white)
+![Trello](https://img.shields.io/badge/Trello-%23026AA7.svg?style=flat-square&logo=eslint&logoColor=white)
 
 ## Install & Execute
 
@@ -150,6 +156,24 @@ yarn build(next build) 후 yarn start (next start)
 ├──  yarn.lock
 ```
 
+## 인프라 도전
+
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)
+![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
+(s3)
+
+## 협업전략
+
+gitflow 전략에 따라 개발
+
+- dongwon # donwon's branch
+- hyosung # hyosung's branch
+- develop # integration develop branch
+- main # deploy master branch
+
+각자 branch에서 작업 후 develop branch로 merge 후 aws에 deploy 하기 위해 main branch 로 최종 배포 진행
+
 ## Richs
 
 ### 김동원
@@ -168,9 +192,9 @@ yarn build(next build) 후 yarn start (next start)
 
 ## 참고 문헌
 
-**[조코딩-전략](https://www.youtube.com/watch?v=WgXOFtDD6XU&t=167s)**
-**[프로젝트 구조](https://velog.io/@hopsprings2/%EA%B2%AC%EA%B3%A0%ED%95%9C-node.js-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EC%95%84%ED%82%A4%ED%85%8D%EC%B3%90-%EC%84%A4%EA%B3%84%ED%95%98%EA%B8%B0#pubsub-%EA%B3%84%EC%B8%B5%EB%8F%84-%EC%82%AC%EC%9A%A9%ED%95%98%EC%8B%AD%EC%8B%9C%EC%98%A4-%EF%B8%8F)**
-**[crypto-js 공식문서](https://www.npmjs.com/package/crypto-js)**
-**[node-upbit 공식문서](https://www.npmjs.com/package/node-upbit)**
-**[express-validator](https://www.npmjs.com/package/express-validator)**
-**[우아한 테크캠프 4기 ET 프로젝트](https://github.com/woowa-techcamp-2021/store-7)**
+- **[조코딩-전략](https://www.youtube.com/watch?v=WgXOFtDD6XU&t=167s)**
+- **[프로젝트 구조](https://velog.io/@hopsprings2/%EA%B2%AC%EA%B3%A0%ED%95%9C-node.js-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EC%95%84%ED%82%A4%ED%85%8D%EC%B3%90-%EC%84%A4%EA%B3%84%ED%95%98%EA%B8%B0#pubsub-%EA%B3%84%EC%B8%B5%EB%8F%84-%EC%82%AC%EC%9A%A9%ED%95%98%EC%8B%AD%EC%8B%9C%EC%98%A4-%EF%B8%8F)**
+- **[crypto-js 공식문서](https://www.npmjs.com/package/crypto-js)**
+- **[node-upbit 공식문서](https://www.npmjs.com/package/node-upbit)**
+- **[express-validator](https://www.npmjs.com/package/express-validator)**
+- **[우아한 테크캠프 4기 ET 프로젝트](https://github.com/woowa-techcamp-2021/store-7)**
