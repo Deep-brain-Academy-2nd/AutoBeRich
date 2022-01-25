@@ -254,7 +254,7 @@ const updateStatusAutoTraiding = async (req: Request, res: Response, next: NextF
     await UserService.updateStatusAutoTrading({ email, status });
     // 자동 매매 시작
     // status false 이면 db에 status 값만 false로 바꿔주면 기존에 돌던 애가 멈춘다. false 일 때 autoTradingStart를 돌려줄 필요가 없다
-    if (status === 'true') {
+    if (status) {
       await TradeService.autoTradingStart({ email, status });
     }
     res.status(200).json({
