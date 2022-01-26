@@ -11,6 +11,8 @@
     "@types/crypto-js": "^4.1.0",
     "@types/express-session": "^1.17.4",
     "@types/express-validator": "^3.0.0",
+    "@types/helmet": "^4.0.0",
+    "@types/hpp": "^0.2.2",
     "@types/query-string": "^6.3.0",
     "@types/request-promise": "^4.1.48",
     "@types/session-file-store": "^1.2.2",
@@ -51,6 +53,8 @@
     "eslint": "^8.6.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "helmet": "^5.0.2",
+    "hpp": "^0.2.3",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.1",
@@ -60,7 +64,7 @@
     "typescript": "^4.5.4"
   },
   "scripts": {
-    "start": "NODE_ENV=production pm2 start src/App.ts --watch",
+    "start": "NODE_ENV=production pm2 start src/App.ts",
     "dev": "nodemon --exec ts-node src/App.ts",
     "debug": "nodemon --inspect src/App.ts"
   },
