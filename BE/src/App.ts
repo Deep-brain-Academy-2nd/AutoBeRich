@@ -6,6 +6,7 @@ import connectDB from './loaders/mongo-connector';
 import properties from './config/properties/properties';
 import cors from 'cors';
 import sanitizeHTML from 'sanitize-html';
+import { logger } from './loaders/logger';
 
 connectDB();
 //require('dotenv').config();
@@ -50,9 +51,12 @@ app.use('/', indexRouter);
 // server start
 app
   .listen(app.get('port'), () => {
+    logger.info('Server listening on port 3000');
     console.log(app.get('port'), 'started server');
   })
   .on('error', (err) => {
+    logger.info('hello');
+    logger.error(err.message);
     console.error(err);
     process.exit(1);
   });

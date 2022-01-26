@@ -14,6 +14,7 @@
     "@types/query-string": "^6.3.0",
     "@types/request-promise": "^4.1.48",
     "@types/session-file-store": "^1.2.2",
+    "@types/winston": "^2.4.4",
     "axios": "^0.24.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -29,7 +30,9 @@
     "request-promise": "^4.2.6",
     "sanitize-html": "^2.6.1",
     "session-file-store": "^1.5.0",
-    "uuidv4": "^6.2.12"
+    "uuidv4": "^6.2.12",
+    "winston": "^3.4.0",
+    "winston-daily-rotate-file": "^4.6.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.2",
