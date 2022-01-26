@@ -5,6 +5,7 @@ import indexRouter from './routes/index';
 import connectDB from './loaders/mongo-connector';
 import properties from './config/properties/properties';
 import cors from 'cors';
+import sanitizeHTML from 'sanitize-html';
 
 connectDB();
 //require('dotenv').config();
@@ -35,6 +36,13 @@ const coreOptions: any = {
   credentials: true,
 };
 app.use(cors(coreOptions));
+
+// block xss for sanitize-html
+const dirty = "<h1>alert('hi');</h1>";
+sanitizeHTML(dirty, {
+  allowedTags: sanitizeHTML.defaults.allowedTags.concat(['img']),
+  allowedAttributes: { a: ['href'] },
+});
 
 // router connect
 app.use('/', indexRouter);
