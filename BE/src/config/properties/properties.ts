@@ -21,4 +21,8 @@ export default {
 
   // morgan 기록용
   NODE_ENV: process.env.NODE_ENV || '',
+
+  // cors whitelist
+  local: process.env.LOCALHOST || '',
+  aws_client: process.env.AWS_CLIENT || '',
 };

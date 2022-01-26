@@ -25,13 +25,21 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 //CORS 설정
-const coreOptions = {
-  origin: 'http://localhost:3000',
+const whiteList: [string, string] = [properties.local, properties.aws_client];
+
+const coreOptions: any = {
+  origin(origin: string, callback: any) {
+    const isWhitelisted = whiteList.indexOf(origin) !== -1;
+    callback(null, isWhitelisted);
+  },
   credentials: true,
 };
 app.use(cors(coreOptions));
 
+// router connect
 app.use('/', indexRouter);
+
+// server start
 app
   .listen(app.get('port'), () => {
     console.log(app.get('port'), 'started server');
