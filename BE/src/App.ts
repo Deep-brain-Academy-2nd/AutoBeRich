@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response} from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
 import path from 'path';
 import indexRouter from './routes/index';
@@ -13,7 +13,13 @@ const app: express.Application = express();
 
 app.set('port', properties.port || 5000);
 
-app.use(morgan('dev'));
+// 사용자 정보 남기기 위한 morgan
+if (properties.NODE_ENV === 'production') {
+  app.use(morgan('production'));
+} else {
+  app.use(morgan('dev'));
+}
+
 app.use('/', express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

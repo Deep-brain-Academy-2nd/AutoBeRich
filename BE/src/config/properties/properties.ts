@@ -18,4 +18,7 @@ export default {
   // upbit key
   upbitAccessKey: process.env.UPBIT_OPEN_API_ACCESS_KEY || '',
   upbitSecretKey: process.env.UPBIT_OPEN_API_SECRET_KEY || '',
+
+  // morgan 기록용
+  NODE_ENV: process.env.NODE_ENV || '',
 };

@@ -212,7 +212,7 @@
 
 "@types/morgan@^1.9.3":
   version "1.9.3"
-  resolved "https://registry.npmjs.org/@types/morgan/-/morgan-1.9.3.tgz"
+  resolved "https://registry.yarnpkg.com/@types/morgan/-/morgan-1.9.3.tgz#ae04180dff02c437312bc0cfb1e2960086b2f540"
   integrity sha512-BiLcfVqGBZCyNCnCH3F4o2GmDLrpy0HeBVnNlyZG4fo88ZiE9SoiBe3C+2ezuwbjlEyT+PDZ17//TAlRxAn75Q==
   dependencies:
     "@types/node" "*"
