@@ -112,11 +112,11 @@ const RegisterPresenter = ({ handleSubmit }: { handleSubmit: any }) => {
                     <TextField
                       required
                       fullWidth
-                      id="secretKey"
+                      id="accessKey"
                       type="password"
-                      name="secretKey"
-                      label="secretKey"
-                      autoComplete="new-secretKey"
+                      name="accessKey"
+                      label="accessKey"
+                      autoComplete="new-accessKey"
                       InputProps={{
                         style: {
                           backgroundColor: 'white',
@@ -128,11 +128,11 @@ const RegisterPresenter = ({ handleSubmit }: { handleSubmit: any }) => {
                     <TextField
                       required
                       fullWidth
-                      id="accessKey"
+                      id="secretKey"
                       type="password"
-                      name="accessKey"
-                      label="accessKey"
-                      autoComplete="new-accessKey"
+                      name="secretKey"
+                      label="secretKey"
+                      autoComplete="new-secretKey"
                       InputProps={{
                         style: {
                           backgroundColor: 'white',
