@@ -1,6 +1,6 @@
 # AutoBeRich (자동으로 부자되기)
 
-Website[http://52.91.234.69:3000/]
+Website[http://3.86.154.6:3000/]
 
 ![main-image](./images/main-image.png)
 
