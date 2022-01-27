@@ -1,8 +1,8 @@
 import React from 'react';
-import registerAPI from '../../apis/register';
+import registerAPI from '../apis/register';
 import RegisterPresenter from './RegisterPresenter';
 import Router from 'next/router';
-import API from '../../apis';
+import API from '../apis';
 type req = {
   email: string;
   name: string;
