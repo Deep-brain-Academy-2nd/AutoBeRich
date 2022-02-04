@@ -1,3 +1,3 @@
-import RegisterContainer from '../../components/RegisterContainer';
+import RegisterContainer from './RegisterContainer';
 
 export default RegisterContainer;

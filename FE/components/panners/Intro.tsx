@@ -13,11 +13,13 @@ const IntroyWrap = Styled.div`
 const Introy = () => {
   return (
     <IntroyWrap>
-      {/* <Image src={oldMan} alt="oldMan" /> */}
+      <Image src={oldMan} alt="oldMan" />
       <div>
         <p>내 계좌 정보를 한 눈에</p>
         <p>확인하고 전략매매를 할 수 있는</p>
-        <p>{/* AutoBeRich <Image src={money} alt="money" /> */}</p>
+        <p>
+          AutoBeRich <Image src={money} alt="money" />
+        </p>
       </div>
     </IntroyWrap>
   );

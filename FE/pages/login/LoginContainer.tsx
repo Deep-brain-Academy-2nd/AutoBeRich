@@ -1,9 +1,8 @@
-import loginAPI from '../apis/login';
 import LoginPresenter from './LoginPresenter';
 import Router from 'next/router';
-import API from '../apis';
-import { useAppDispatch } from '../store/hooks';
-import { getUserInfo } from '../store/reducers/userInfo';
+import API from '../../apis';
+import { useAppDispatch } from '../../store/hooks';
+import { getUserInfo } from '../../store/reducers/userInfo';
 type req = {
   email: string;
   password: string;
