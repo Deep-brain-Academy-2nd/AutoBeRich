@@ -54,6 +54,9 @@ const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: strin
       // 임시로 k값 0.5로 고정했으나 최적의 k값을 찾기 위한 함수 작성 요망 :: 2022-01-24 dongwon
       const targetPrice = await getTargetPrice('KRW-BTC', 0.5); // 매수 목표가 설정
       const currentPrice = await getCurrentPrice('KRW-BTC'); // 현재 가격
+
+      console.log('KRW_BTC 목표가격 ========== ' + targetPrice);
+      +console.log('KRW_BTC 현재가격 ========== ' + currentPrice);
       // 현재가격이 매수 목표가 보다 높을시 매수
       if (targetPrice < currentPrice) {
         // 계좌 조회
@@ -62,6 +65,7 @@ const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: strin
         const krw = balances.find((item: IAccount) => {
           return item.currency === 'KRW';
         });
+        console.log('KRW 보유 원화 ========== ' + krw.balance);
         // 5천원 이상이면 매수
         if (krw.balance > 5000) {
           // 수수료 0.0005%라 남겨두고 구매
@@ -146,6 +150,7 @@ const getCurrentPrice = async (ticker: string) => {
 //시장가 매수
 const buyMarketOrder = async (ticker: string, price: number, accessKey: string, secretKey: string) => {
   try {
+    console.log('총금액 ========== ' + price + ' 매수 ', new Date());
     const body = {
       market: ticker,
       side: 'bid',
@@ -188,6 +193,7 @@ const buyMarketOrder = async (ticker: string, price: number, accessKey: string, 
 //시장가 매도
 const sellMarketOrder = async (ticker: string, volume: number, accessKey: string, secretKey: string) => {
   try {
+    console.log('매도 시작 ========== ', new Date());
     const body = {
       market: ticker,
       side: 'ask',
