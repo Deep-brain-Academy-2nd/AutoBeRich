@@ -23,7 +23,7 @@ const TopBar = () => {
     if (localStorageName) {
       setName(localStorageName);
     }
-  });
+  }, []);
   const onLogout = () => {
     localStorage.removeItem('email');
     localStorage.removeItem('name');

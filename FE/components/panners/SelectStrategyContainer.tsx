@@ -1,4 +1,3 @@
-import { NextRequest } from 'next/server';
 import React, { useState, useEffect } from 'react';
 import API from '../../apis';
 import SelectStrategy from './SelectStrategy';
