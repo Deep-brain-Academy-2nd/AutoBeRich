@@ -1,21 +1,24 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
 import API from '.';
 
 type Data = {
-  email: string;
-  password: string;
+	email: string;
+	password: string;
+	name: string;
+	accessKey: string;
+	secretKey: string;
 };
 
 const registerAPI = {
-  register: (obj: Data) => {
-    API.post('users/signup', obj)
-      .then((res: any) => {
-        return res;
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  },
+	register: async (obj: Data) => {
+		try {
+			const result = await API.post('users/signup', obj).then((res: any) => {
+				return res.data;
+			});
+			return result;
+		} catch (error) {
+			console.error(error);
+		}
+	},
 };
 
 export default registerAPI;
