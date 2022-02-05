@@ -30,7 +30,7 @@ const autoTradingStart = async (data: userUniqueSearchInput) => {
       // @ts-ignore
       const { status }: IUser = user;
       if (status) {
-        autoTrading(decryptedAccessKey, decryptedSecretKey);
+        autoTrading(decryptedAccessKey, decryptedSecretKey, user);
         timer();
       }
     }, 5000);
@@ -41,22 +41,33 @@ const autoTradingStart = async (data: userUniqueSearchInput) => {
 };
 
 // 자동 매매 함수 분리 :: 2022-01-24 dongwon
-const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: string) => {
+const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: string, user: IUser | null) => {
   try {
     // ***** 테스트 위해서 여기 시간조정 getStartTime, getTime, addSeconds 등으로 가서 조절 :: dongwon
     const now = new Date(); // 현재시간
-    const startTime = await getStartTime('KRW-BTC'); // 시작시간 9시
-    const endTime = addDays(new Date(startTime), 1).getTime(); // 끝나는 시간 9시 + 1일
-    const endTimeTenSeconds = addSeconds(new Date(endTime), -10).getTime();
+    const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDay() - 1, 8, 59, 50);
+    const endTime = new Date(now.getFullYear(), now.getMonth(), now.getDay() - 1, 9, 0, 0);
 
-    const startTimeDate = new Date(startTime);
-    const endTimeTenSecondsDate = new Date(endTimeTenSeconds);
-    console.log(' startTime ===== > ' + startTimeDate);
-    console.log(' endTimeTenSeconds ===== > ' + endTimeTenSecondsDate);
+    //const startTime = await getStartTime('KRW-BTC'); // 시작시간 9시
+    //const endTime = addDays(new Date(startTime), 1).getTime(); // 끝나는 시간 9시 + 1일
+    //const endTimeTenSeconds = addSeconds(new Date(endTime), -10).getTime();
 
-    // 9시 < 현재 < 8:59:50 매수 :: 2022-01-24 dongwon
-    if (startTime <= now.getTime() && now.getTime() <= endTimeTenSeconds) {
-      // 임시로 k값 0.5로 고정했으나 최적의 k값을 찾기 위한 함수 작성 요망 :: 2022-01-24 dongwon
+    console.log('현재시간 ====== > ' + now);
+    console.log('startTime ====== > ' + startTime);
+    console.log('endTime ====== > ' + endTime);
+    //매도
+    if (startTime <= now && now <= endTime) {
+      const balances = await getBalance(decryptedAccessKey, decryptedSecretKey);
+      const btc = balances.find((item: IAccount) => {
+        return item.currency === 'BTC';
+      });
+      // 5천원이상이면 매도. 현재 비트코인 가격상 0.00008이 5천원임. :: 2022-01-24 dongwon
+      if (btc.balance > 0.00008) {
+        console.log(user?.name + '매도');
+        await sellMarketOrder('KRW-BTC', btc.balance * 0.9995, decryptedAccessKey, decryptedSecretKey);
+      }
+    } else {
+      //매수
       const targetPrice = await getTargetPrice('KRW-BTC', 0.5); // 매수 목표가 설정
       const currentPrice = await getCurrentPrice('KRW-BTC'); // 현재 가격
 
@@ -74,19 +85,9 @@ const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: strin
         // 5천원 이상이면 매수
         if (krw.balance > 5000) {
           // 수수료 0.0005%라 남겨두고 구매
+          console.log(user?.name + '매수');
           buyMarketOrder('KRW-BTC', krw.balance * 0.9995, decryptedAccessKey, decryptedSecretKey);
         }
-      }
-    }
-    // 매도
-    else {
-      const balances = await getBalance(decryptedAccessKey, decryptedSecretKey);
-      const btc = balances.find((item: IAccount) => {
-        return item.currency === 'BTC';
-      });
-      // 5천원이상이면 매도. 현재 비트코인 가격상 0.00008이 5천원임. :: 2022-01-24 dongwon
-      if (btc.balance > 0.00008) {
-        await sellMarketOrder('KRW-BTC', btc.balance * 0.9995, decryptedAccessKey, decryptedSecretKey);
       }
     }
   } catch (error) {
