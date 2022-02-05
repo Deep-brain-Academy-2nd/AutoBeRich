@@ -52,9 +52,6 @@ const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: strin
     //const endTime = addDays(new Date(startTime), 1).getTime(); // 끝나는 시간 9시 + 1일
     //const endTimeTenSeconds = addSeconds(new Date(endTime), -10).getTime();
 
-    console.log('현재시간 ====== > ' + now);
-    console.log('startTime ====== > ' + startTime);
-    console.log('endTime ====== > ' + endTime);
     //매도
     if (startTime <= now && now <= endTime) {
       const balances = await getBalance(decryptedAccessKey, decryptedSecretKey);
@@ -63,7 +60,7 @@ const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: strin
       });
       // 5천원이상이면 매도. 현재 비트코인 가격상 0.00008이 5천원임. :: 2022-01-24 dongwon
       if (btc.balance > 0.00008) {
-        console.log(user?.name + '매도');
+        console.log(user?.name + ' 매도 시작 ==========  ' + new Date());
         await sellMarketOrder('KRW-BTC', btc.balance * 0.9995, decryptedAccessKey, decryptedSecretKey);
       }
     } else {
@@ -85,7 +82,7 @@ const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: strin
         // 5천원 이상이면 매수
         if (krw.balance > 5000) {
           // 수수료 0.0005%라 남겨두고 구매
-          console.log(user?.name + '매수');
+          console.log(user?.name + ' 총금액 ========== ' + krw.balance * 0.9995 + ' 매수 ', new Date());
           buyMarketOrder('KRW-BTC', krw.balance * 0.9995, decryptedAccessKey, decryptedSecretKey);
         }
       }
@@ -156,7 +153,6 @@ const getCurrentPrice = async (ticker: string) => {
 //시장가 매수
 const buyMarketOrder = async (ticker: string, price: number, accessKey: string, secretKey: string) => {
   try {
-    console.log('총금액 ========== ' + price + ' 매수 ', new Date());
     const body = {
       market: ticker,
       side: 'bid',
@@ -199,7 +195,6 @@ const buyMarketOrder = async (ticker: string, price: number, accessKey: string, 
 //시장가 매도
 const sellMarketOrder = async (ticker: string, volume: number, accessKey: string, secretKey: string) => {
   try {
-    console.log('매도 시작 ========== ', new Date());
     const body = {
       market: ticker,
       side: 'ask',
