@@ -1,6 +1,6 @@
 # AutoBeRich (자동으로 부자되기)
 
-Website[http://3.86.154.6:3000/]
+Website[http://autoberichclient.s3-website-us-east-1.amazonaws.com/]
 
 ![main-image](./images/main-image.png)
 
