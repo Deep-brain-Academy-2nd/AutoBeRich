@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 
-import API from '../../apis';
 import tradingAPI from '../../apis/trading';
 import MyAccount from './MyAccount';
 
