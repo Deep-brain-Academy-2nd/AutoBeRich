@@ -66,7 +66,8 @@ const SelectStrategyContainer = () => {
 			}
 		} catch (error) {
 			alert('매매 선택이 실패하였습니다.');
-			console.error(error);
+			// console.error(error);
+			new Error('Failure Select tradingStrategy');
 		}
 	};
 	return (

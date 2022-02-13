@@ -36,11 +36,12 @@ const LoginContainer = () => {
 				alert('login 실패');
 			}
 		} catch (error: any) {
-			if (error.message.indexOf('401')) {
-				alert('아이디가 없습니다. 가입 후 진행해주세요.');
-				return;
-			}
-			console.error(error);
+			// if (error.message.indexOf('401')) {
+			alert('아이디가 없습니다. 가입 후 진행해주세요.');
+			// 	return;
+			// }
+			// console.error(error);
+			new Error('Failure Login');
 		}
 	}
 	return <LoginPresenter handleSubmit={onSubmit} />;

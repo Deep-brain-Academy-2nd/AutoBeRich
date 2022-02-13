@@ -16,7 +16,26 @@ const MyAccountWrap = Styled.div`
 	  }
 `;
 
-const MyAccount = ({ userInfo, krwInfo, strategy }: { userInfo: any; krwInfo: any; strategy: any }) => {
+interface userAccountInfoTypes {
+	userInfo: userInfoTypes;
+	krwInfo: any;
+	strategy: string;
+}
+export interface userInfoTypes {
+	totalMoney: string;
+	coinList: coinListTypes;
+}
+export interface coinListTypes {
+	name: string;
+	quantity: string;
+	earningRate: string;
+	entryPrice: string;
+	avgBuyPrice: string;
+	trade_price: string;
+	currentValuePrice: string;
+}
+
+const MyAccount = ({ userInfo, krwInfo, strategy }: userAccountInfoTypes) => {
 	return (
 		<MyAccountWrap>
 			{userInfo ? (
@@ -26,7 +45,7 @@ const MyAccount = ({ userInfo, krwInfo, strategy }: { userInfo: any; krwInfo: an
 					<li>선택 전략 : {strategy === 'Changing_Trading' ? '변동성매매' : ''}</li>
 					<br />
 					{userInfo &&
-						Object.values(userInfo.coinList).map((item: any, idx: number) => {
+						Object.values(userInfo.coinList).map((item: coinListTypes, idx: number) => {
 							return (
 								<ul key={idx}>
 									<li>보유 코인 : {item.name}</li>

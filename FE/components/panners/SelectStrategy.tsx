@@ -31,9 +31,9 @@ const SelectStrategy = ({
 	changeStrategy,
 	changeTradingStatus,
 }: {
-	propsStrategy: any;
-	changeStrategy: any;
-	changeTradingStatus: any;
+	propsStrategy: string;
+	changeStrategy: Function;
+	changeTradingStatus: Function;
 }) => {
 	const [strategy, setStrategy] = useState('');
 	const handleChange = (event: any) => {
