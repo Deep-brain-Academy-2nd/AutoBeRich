@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 import API from '.';
 
 export interface updateTradingApiResType {
@@ -12,23 +13,23 @@ const tradingAPI = {
 				params: {
 					email,
 				},
-			}).then((res) => {
+			}).then((res: AxiosResponse) => {
 				return res.data;
 			});
 
 			return result;
 		} catch (error) {
-			console.error(error);
+			new Error('Failure tradingAPI');
 		}
 	},
 	updateTradingStrategy: async (param: updateTradingApiResType) => {
 		try {
-			const result = await API.put('/trading/updateTradingStrategy', param).then((res) => {
+			const result = await API.put('/trading/updateTradingStrategy', param).then((res: AxiosResponse) => {
 				return res.data;
 			});
 			return result;
 		} catch (error) {
-			console.error(error);
+			new Error('Failure updateTradingStrategy');
 		}
 	},
 	updateStatusAutoTraiding: async (req: { status: boolean; email: string | null }) => {
@@ -36,7 +37,7 @@ const tradingAPI = {
 			const result = await API.post('/trading/updateStatusAutoTraiding', req);
 			return result.data;
 		} catch (error) {
-			console.error(error);
+			new Error('Failure updateStatusAutoTrading');
 		}
 	},
 };

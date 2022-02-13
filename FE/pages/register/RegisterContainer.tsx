@@ -9,9 +9,20 @@ type req = {
 	accessKey: string;
 	secretKey: string;
 };
-
+// React.FormEvent<HTMLFormElement>
+// interface tempType {React.FormEvent<HTMLFormElement>}
+interface tempType {
+	preventDefault: Function;
+	currentTarget: {
+		email: { value: string };
+		name: { value: string };
+		password: { value: string };
+		accessKey: { value: string };
+		secretKey: { value: string };
+	};
+}
 const RegisterContainer = () => {
-	const registerHandleSubmit: any = async (e: any) => {
+	const registerHandleSubmit: any = async (e: tempType) => {
 		try {
 			e.preventDefault();
 
@@ -58,9 +69,9 @@ const RegisterContainer = () => {
 				return;
 			}
 			// return result;
-		} catch (error) {
+		} catch (e) {
 			// 회원가입 에러처리
-			console.error(error);
+			new Error('Register Error');
 		}
 	};
 	return <RegisterPresenter handleSubmit={registerHandleSubmit} />;

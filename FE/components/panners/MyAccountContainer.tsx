@@ -1,11 +1,21 @@
 import React, { useEffect, useState } from 'react';
 
-import API from '../../apis';
 import tradingAPI from '../../apis/trading';
-import MyAccount from './MyAccount';
+import MyAccount, { userInfoTypes } from './MyAccount';
 
 const MyAccountContainer = () => {
-	const [userInfo, setUserInfo] = useState('');
+	const [userInfo, setUserInfo] = useState<userInfoTypes>({
+		totalMoney: '',
+		coinList: {
+			name: '',
+			quantity: '',
+			earningRate: '',
+			entryPrice: '',
+			avgBuyPrice: '',
+			trade_price: '',
+			currentValuePrice: '',
+		},
+	});
 	const [krwInfo, setKrwInfo] = useState('');
 	const [strategy, setStrategy] = useState('');
 	useEffect(() => {
@@ -19,9 +29,13 @@ const MyAccountContainer = () => {
 				setUserInfo(res.coinInfo);
 				setKrwInfo(res.upbit_accounts);
 				setStrategy(res.strategy);
+				console.log(krwInfo);
+			} else {
+				alert('정보를 가져오려면 로그인해주세요.');
 			}
 		} catch (error) {
-			console.error(error);
+			// console.error(error);
+			new Error('Failure Get AccountInfo');
 		}
 	};
 	return <MyAccount userInfo={userInfo} krwInfo={krwInfo} strategy={strategy} />;
