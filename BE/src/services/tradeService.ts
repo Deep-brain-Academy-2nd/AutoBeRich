@@ -72,12 +72,17 @@ const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: strin
       console.log('KRW_BTC 목표가격 ========== ' + targetPrice);
       console.log('KRW_BTC 현재가격 ========== ' + currentPrice);
 
-      /*const doc = new GoogleSpreadsheet('19rg6IKaNH2jmmJxOroO5iwmcCy_pTySHKubRW04h4Xw');
+      const doc = new GoogleSpreadsheet('19rg6IKaNH2jmmJxOroO5iwmcCy_pTySHKubRW04h4Xw');
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const credentials = require('../../autoberich-ea2b8e6c632b.json');
+      const credentials = require('../../autoberich-028e930e0489.json');
       await doc.useServiceAccountAuth(credentials);
+      await doc.loadInfo();
+      let docSheet = doc.sheetsByTitle[user?.email || ''];
+      if (docSheet == null) {
+        docSheet = await doc.addSheet({ title: user?.email });
+      }
 
-      await doc.loadInfo();*/
+      const larryRow = await docSheet.addRow({ name: 'Larry Page', email: 'larry@google.com' });
 
       // 현재가격이 매수 목표가 보다 높을시 매수
       if (targetPrice < currentPrice) {
