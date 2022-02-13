@@ -7,14 +7,14 @@
 | Code | Type | Description                            | message                             |
 | ---- | ---- | -------------------------------------- | ----------------------------------- |
 | 200  | 성공 |                                        | success                             |
-| 400  | 실패 | 헤딩 이메일 주소 없음, 비밀번호 불일치 | don't have dbs , password incorrect |
-| 500  | 실패 | DB 조회 실패, 각종 서버에러            | fail get db infos, server error     |
+| 400  | 실패 | 헤딩 이메일 주소 없음, 비밀번호 불일치 | Don't have dbs , Incorrect password |
+| 500  | 실패 | DB 조회 실패, 각종 서버에러            | Fail get db infos, Server error     |
 
 ```json
 {
 	"status": "failure",
 	"code": 400,
-	"msg": "incorrect password"
+	"msg": "Incorrect password"
 }
 ```
 
@@ -27,11 +27,11 @@
 - 이미 가입된 아이디가 있을때, 가입하는 회원 정보의 유효성 실패 (전부 400 처리로 메시지 처리)
 - DB 조회 실패로 못가져왔을시 (500)
 
-| Code | Type | Description                                                   | message                              |
-| ---- | ---- | ------------------------------------------------------------- | ------------------------------------ |
-| 200  | 성공 |                                                               | success                              |
-| 400  | 실패 | 이미 가입된 아이디가 있을때, 가입하는 회원 정보의 유효성 실패 | already signup, info validity failed |
-| 500  | 실패 | DB 조회 실패, 각종 서버에러                                   | fail get db infos, server error      |
+| Code | Type | Description                                                   | message                             |
+| ---- | ---- | ------------------------------------------------------------- | ----------------------------------- |
+| 200  | 성공 |                                                               | success                             |
+| 400  | 실패 | 이미 가입된 아이디가 있을때, 가입하는 회원 정보의 유효성 실패 | Already signup, Faild info validity |
+| 500  | 실패 | DB 조회 실패, 각종 서버에러                                   | Failed get db infos, Server error   |
 
 ## 개인 계좌 정보 호출 시
 
@@ -39,11 +39,11 @@
 - 계좌 정보 불러오기 실패시 (500 에러)
 - 클라이언트 alert으로 선 처리 가능
 
-| Code | Type | Description                                                            | message             |
-| ---- | ---- | ---------------------------------------------------------------------- | ------------------- |
-| 200  | 성공 |                                                                        | success             |
-| 400  | 실패 | 로그인 정보가 없어서 계좌를 가져올 수 없을때 (400 에러, 메시지로 처리) | not have login info |
-| 500  | 실패 | 각종 서버에러                                                          | server error        |
+| Code | Type | Description                                                            | message               |
+| ---- | ---- | ---------------------------------------------------------------------- | --------------------- |
+| 200  | 성공 |                                                                        | success               |
+| 400  | 실패 | 로그인 정보가 없어서 계좌를 가져올 수 없을때 (400 에러, 메시지로 처리) | Don't have login info |
+| 500  | 실패 | 각종 서버에러                                                          | Server error          |
 
 ## 전략 변경 api 호출 시
 
@@ -54,8 +54,8 @@
 | Code | Type | Description                                            | message                                  |
 | ---- | ---- | ------------------------------------------------------ | ---------------------------------------- |
 | 200  | 성공 |                                                        | success                                  |
-| 400  | 실패 | 이미 선택한 전략, req의 변경할 정보가 유효하지 않을 때 | already select strategy, Validity failed |
-| 500  | 실패 | 각종 서버에러                                          | server error                             |
+| 400  | 실패 | 이미 선택한 전략, req의 변경할 정보가 유효하지 않을 때 | Already select strategy, Validity failed |
+| 500  | 실패 | 각종 서버에러                                          | Server error                             |
 
 ## 자동매매 상태 변경 api 호출 시
 
@@ -66,8 +66,8 @@
 | Code | Type | Description                                 | message                                      |
 | ---- | ---- | ------------------------------------------- | -------------------------------------------- |
 | 200  | 성공 |                                             | success                                      |
-| 400  | 실패 | 이미 동작하고 있을 시, 이미 중지된 상태일시 | already 택 1(start)(stop) auto trading       |
-| 500  | 실패 | 각종 서버에러, 자동 매매 함수 호출 실패     | server error, To call auto trading fn failed |
+| 400  | 실패 | 이미 동작하고 있을 시, 이미 중지된 상태일시 | Already 택 1(start)(stop) auto trading       |
+| 500  | 실패 | 각종 서버에러, 자동 매매 함수 호출 실패     | Server error, Failed to call auto trading fn |
 
 ## 참고 문서
 
