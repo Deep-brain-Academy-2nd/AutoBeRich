@@ -17,7 +17,6 @@ const SelectStrategyContainer = () => {
 				alert('변경완료');
 				setStrategy(result);
 			} else {
-				console.log(result, '변경실패');
 				alert('변경 실패하였습니다.');
 			}
 		} else {
@@ -43,7 +42,15 @@ const SelectStrategyContainer = () => {
 						if (res.code === 200) {
 							alert('자동 매매가 시작하였습니다.');
 						} else {
-							alert('자동 매매 시작을 하지 못하였습니다. 잠시 후 다시 시도해주세요.');
+							if (res.code === 400) {
+								if (res.message.indexOf('start')) {
+									alert('이미 동작중입니다.');
+								} else {
+									alert('이미 정지하였습니다.');
+								}
+							} else {
+								alert('자동 매매 시작을 하지 못하였습니다. 잠시 후 다시 시도해주세요.');
+							}
 						}
 					}
 				}

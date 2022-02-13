@@ -18,6 +18,8 @@ const MyAccountContainer = () => {
 				setUserInfo(res.coinInfo);
 				setKrwInfo(res.upbit_accounts);
 				setStrategy(res.strategy);
+			} else {
+				alert('정보를 가져오려면 로그인해주세요.');
 			}
 		} catch (error) {
 			console.error(error);

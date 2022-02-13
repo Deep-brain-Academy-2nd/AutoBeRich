@@ -22,7 +22,7 @@ const LoginContainer = () => {
 
 			// const res: any = await API.post('users/login', body);
 			const res: any = await loginAPI.login(body);
-			console.log(res);
+
 			if (res.code === 200) {
 				const token = res.token,
 					name = res.name;
