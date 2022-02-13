@@ -10,6 +10,7 @@ import { IAccount } from '../interfaces/IAccount';
 import { IUser, userUniqueSearchInput } from '../interfaces/IUser';
 import UserService from './userService';
 import axios from 'axios';
+import { GoogleSpreadsheet } from 'google-spreadsheet';
 
 const autoTradingStart = async (data: userUniqueSearchInput) => {
   // 로그인하고 코인 구매가 가능한 정보 가져오기 :: 2022-01-14 dongwon
@@ -45,8 +46,8 @@ const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: strin
   try {
     // ***** 테스트 위해서 여기 시간조정 getStartTime, getTime, addSeconds 등으로 가서 조절 :: dongwon
     const now = new Date(); // 현재시간
-    const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDay() - 1, 8, 59, 50);
-    const endTime = new Date(now.getFullYear(), now.getMonth(), now.getDay() - 1, 9, 0, 0);
+    const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 8, 59, 50);
+    const endTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0);
 
     //const startTime = await getStartTime('KRW-BTC'); // 시작시간 9시
     //const endTime = addDays(new Date(startTime), 1).getTime(); // 끝나는 시간 9시 + 1일
@@ -70,6 +71,14 @@ const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: strin
 
       console.log('KRW_BTC 목표가격 ========== ' + targetPrice);
       console.log('KRW_BTC 현재가격 ========== ' + currentPrice);
+
+      /*const doc = new GoogleSpreadsheet('19rg6IKaNH2jmmJxOroO5iwmcCy_pTySHKubRW04h4Xw');
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const credentials = require('../../autoberich-ea2b8e6c632b.json');
+      await doc.useServiceAccountAuth(credentials);
+
+      await doc.loadInfo();*/
+
       // 현재가격이 매수 목표가 보다 높을시 매수
       if (targetPrice < currentPrice) {
         // 계좌 조회
@@ -186,6 +195,7 @@ const buyMarketOrder = async (ticker: string, price: number, accessKey: string, 
     } catch (error) {
       console.error(error);
     }
+
     return result;
   } catch (error) {
     console.error(error);
