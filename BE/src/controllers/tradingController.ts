@@ -63,6 +63,7 @@ const changeResponse = async (data: any) => {
 };
 
 const getCurrentCoinInfos = (name: string) => {
+  if (name === 'KRW-LUNA') name = 'BTC-LUNA';
   const options: any = {
     method: 'GET',
     url: 'https://api.upbit.com/v1/ticker',
