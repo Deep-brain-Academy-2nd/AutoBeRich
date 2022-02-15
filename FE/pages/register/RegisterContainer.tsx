@@ -22,7 +22,7 @@ interface tempType {
 	};
 }
 const RegisterContainer = () => {
-	const registerHandleSubmit: any = async (e: tempType) => {
+	const registerHandleSubmit = async (e: tempType) => {
 		try {
 			e.preventDefault();
 
@@ -57,7 +57,7 @@ const RegisterContainer = () => {
 
 			// const res: any = await API.post('users/signup', body);
 			const res = await registerAPI.register(body);
-			console.log(res);
+
 			if (res.code === 200) {
 				alert('가입에 성공하였습니다.');
 				Router.replace('/login');

@@ -3,6 +3,15 @@ import React, { useEffect, useState } from 'react';
 import tradingAPI from '../../apis/trading';
 import MyAccount, { userInfoTypes } from './MyAccount';
 
+export interface krwInfoType {
+	avg_buy_price: string;
+	avg_buy_price_modified: boolean;
+	balance: string;
+	currency: string;
+	locked: string;
+	unit_currency: string;
+}
+
 const MyAccountContainer = () => {
 	const [userInfo, setUserInfo] = useState<userInfoTypes>({
 		totalMoney: '',
@@ -16,8 +25,9 @@ const MyAccountContainer = () => {
 			currentValuePrice: '',
 		},
 	});
-	const [krwInfo, setKrwInfo] = useState('');
+	const [krwInfo, setKrwInfo] = useState<krwInfoType[]>([]);
 	const [strategy, setStrategy] = useState('');
+	const [totalKRW, setTotalKRW] = useState(0);
 	useEffect(() => {
 		getAccountInfos();
 	}, []);
@@ -29,7 +39,7 @@ const MyAccountContainer = () => {
 				setUserInfo(res.coinInfo);
 				setKrwInfo(res.upbit_accounts);
 				setStrategy(res.strategy);
-				console.log(krwInfo);
+				setTotalKRW(parseInt(res.krwInfo[0].balance));
 			} else {
 				alert('정보를 가져오려면 로그인해주세요.');
 			}
@@ -38,7 +48,7 @@ const MyAccountContainer = () => {
 			new Error('Failure Get AccountInfo');
 		}
 	};
-	return <MyAccount userInfo={userInfo} krwInfo={krwInfo} strategy={strategy} />;
+	return <MyAccount userInfo={userInfo} krwInfo={krwInfo} strategy={strategy} totalKRW={totalKRW} />;
 };
 
 export default MyAccountContainer;

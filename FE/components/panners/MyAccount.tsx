@@ -1,5 +1,6 @@
 import React from 'react';
 import Styled from 'styled-components';
+import { krwInfoType } from './MyAccountContainer';
 
 const MyAccountWrap = Styled.div`
     width: 30%;
@@ -18,8 +19,9 @@ const MyAccountWrap = Styled.div`
 
 interface userAccountInfoTypes {
 	userInfo: userInfoTypes;
-	krwInfo: any;
+	krwInfo: krwInfoType;
 	strategy: string;
+	totalKRW: number;
 }
 export interface userInfoTypes {
 	totalMoney: string;
@@ -35,12 +37,12 @@ export interface coinListTypes {
 	currentValuePrice: string;
 }
 
-const MyAccount = ({ userInfo, krwInfo, strategy }: userAccountInfoTypes) => {
+const MyAccount = ({ userInfo, krwInfo, strategy, totalKRW }: userAccountInfoTypes) => {
 	return (
 		<MyAccountWrap>
 			{userInfo ? (
 				<ul>
-					<li>보유원화 : {parseInt(krwInfo && krwInfo[0].balance)} 원</li>
+					<li>보유원화 : {totalKRW} 원</li>
 					<li>총 매수금액 : {parseInt(userInfo.totalMoney)} 원</li>
 					<li>선택 전략 : {strategy === 'Changing_Trading' ? '변동성매매' : ''}</li>
 					<br />
