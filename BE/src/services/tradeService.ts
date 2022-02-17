@@ -34,7 +34,7 @@ const autoTradingStart = async (data: userUniqueSearchInput) => {
         autoTrading(decryptedAccessKey, decryptedSecretKey, user);
         timer();
       }
-    }, 5000);
+    }, 7000);
   }
   if (status) {
     timer();
@@ -49,10 +49,6 @@ const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: strin
     const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 8, 59, 50);
     const endTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0);
 
-    //const startTime = await getStartTime('KRW-BTC'); // 시작시간 9시
-    //const endTime = addDays(new Date(startTime), 1).getTime(); // 끝나는 시간 9시 + 1일
-    //const endTimeTenSeconds = addSeconds(new Date(endTime), -10).getTime();
-
     //매도
     if (startTime <= now && now <= endTime) {
       const balances = await getBalance(decryptedAccessKey, decryptedSecretKey);
@@ -64,6 +60,8 @@ const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: strin
         console.log(user?.name + ' 매도 시작 ==========  ' + new Date());
         await sellMarketOrder('KRW-BTC', btc.balance * 0.9995, decryptedAccessKey, decryptedSecretKey);
       }
+      //여기에 구글 시트 추가
+      writeExcelSeet(decryptedAccessKey, decryptedSecretKey, user);
     } else {
       //매수
       const targetPrice = await getTargetPrice('KRW-BTC', 0.5); // 매수 목표가 설정
@@ -71,13 +69,6 @@ const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: strin
 
       console.log('KRW_BTC 목표가격 ========== ' + targetPrice);
       console.log('KRW_BTC 현재가격 ========== ' + currentPrice);
-
-      /*const doc = new GoogleSpreadsheet('19rg6IKaNH2jmmJxOroO5iwmcCy_pTySHKubRW04h4Xw');
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const credentials = require('../../autoberich-ea2b8e6c632b.json');
-      await doc.useServiceAccountAuth(credentials);
-
-      await doc.loadInfo();*/
 
       // 현재가격이 매수 목표가 보다 높을시 매수
       if (targetPrice < currentPrice) {
@@ -255,6 +246,74 @@ const addSeconds = (date: Date, seconds: number) => {
   const result = new Date(date);
   result.setSeconds(result.getSeconds() + seconds);
   return result;
+};
+
+const writeExcelSeet = async (decryptedAccessKey: string, decryptedSecretKey: string, user: IUser | null) => {
+  const doc = new GoogleSpreadsheet('19rg6IKaNH2jmmJxOroO5iwmcCy_pTySHKubRW04h4Xw');
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const credentials = require('../../autoberich-028e930e0489.json');
+  await doc.useServiceAccountAuth(credentials);
+  await doc.loadInfo();
+  let docSheet = doc.sheetsByTitle[user?.email || ''];
+  if (docSheet == null) {
+    docSheet = await doc.addSheet({ title: user?.email });
+
+    await docSheet.loadCells('A1:E1'); // loads a range of cells
+    const a1 = docSheet.getCell(0, 0); // access cells using a zero-based index
+    const b1 = docSheet.getCellByA1('B1'); // or A1 style notation
+    const c1 = docSheet.getCellByA1('C1');
+    const d1 = docSheet.getCellByA1('D1');
+    const e1 = docSheet.getCellByA1('E1');
+    // access everything about the cell
+    // update the cell contents and formatting
+    a1.value = 'name';
+    a1.textFormat = { bold: true };
+    b1.value = 'email';
+    b1.textFormat = { bold: true };
+    c1.value = 'date';
+    c1.textFormat = { bold: true };
+    d1.value = 'KRW';
+    d1.textFormat = { bold: true };
+    e1.value = 'earning_rate';
+    e1.textFormat = { bold: true };
+    await docSheet.saveUpdatedCells();
+    const initBalances = await getBalance(decryptedAccessKey, decryptedSecretKey);
+    // 보유 원화 조회
+    const krw = initBalances.find((item: IAccount) => {
+      return item.currency === 'KRW';
+    });
+    const row = await docSheet.addRow({
+      name: user?.name || '',
+      email: user?.email || '',
+      date: new Date().toString(),
+      KRW: parseInt(krw.balance) || -1,
+      earning_rate: 'There is no record, so the rate of return cannot be calculated.',
+    });
+  }
+
+  const balances = await getBalance(decryptedAccessKey, decryptedSecretKey);
+  // 보유 원화 조회
+  const krw = balances.find((item: IAccount) => {
+    return item.currency === 'KRW';
+  });
+  const currentRows = await docSheet.getRows();
+  const rowCount = currentRows.length;
+  const exHaveKrw = currentRows[rowCount - 1].KRW;
+  const row = await docSheet.addRow({
+    name: user?.name || '',
+    email: user?.email || '',
+    date: new Date().toString(),
+    KRW: parseInt(krw.balance) || -1,
+    earning_rate: (parseInt(krw.balance) / exHaveKrw) * 100 - 100 + '%',
+  });
+};
+
+const getRor = async (ticker: string, k: number) => {
+  const quoationService = new QuoationService();
+  const df = await quoationService.getDayCandles({
+    marketCoin: ticker,
+    count: 7,
+  });
 };
 
 export default {
