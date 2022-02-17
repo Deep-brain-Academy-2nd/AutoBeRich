@@ -4,7 +4,7 @@ import Styled from 'styled-components';
 
 const SelectStrategyWrap = Styled.div`
     width: 20%;
-    height: 33%;
+    height: 40%;
     background-color: white;
     border-radius: 5%;
     @media only screen and (max-width: 768px) {
