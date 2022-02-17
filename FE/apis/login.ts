@@ -1,5 +1,5 @@
 import API from '.';
-
+import { AxiosResponse } from 'axios';
 type Data = {
 	email: string;
 	password: string;
@@ -9,12 +9,13 @@ const JWT_EXPIRY_TIME = 24 * 3600 * 1000; // 만료 시간 (24시간 밀리 초�
 const loginAPI = {
 	login: async (obj: Data) => {
 		try {
-			const result = await API.post('users/login', obj).then((res: any) => {
+			const result = await API.post('users/login', obj).then((res: AxiosResponse) => {
 				return res.data;
 			});
 			return result;
 		} catch (error) {
-			console.error(error);
+			// console.error(error);
+			new Error('Failure Login');
 		}
 	},
 

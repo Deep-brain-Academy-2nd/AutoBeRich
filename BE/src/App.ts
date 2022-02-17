@@ -34,10 +34,12 @@ app.use(express.urlencoded({ extended: false }));
 const whiteList: [string, string] = [properties.local, properties.aws_client];
 
 const coreOptions: any = {
-  origin(origin: string, callback: any) {
-    console.log(origin);
-    const isWhitelisted = whiteList.indexOf(origin) !== -1;
-    callback(null, isWhitelisted);
+  origin: function (origin: string, callback: any) {
+    if (whiteList.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Now Allowed Origin'));
+    }
   },
   credentials: true,
 };

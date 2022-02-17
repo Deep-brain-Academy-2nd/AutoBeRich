@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 import API from '.';
 
 type Data = {
@@ -11,12 +12,13 @@ type Data = {
 const registerAPI = {
 	register: async (obj: Data) => {
 		try {
-			const result = await API.post('users/signup', obj).then((res: any) => {
+			const result = await API.post('users/signup', obj).then((res: AxiosResponse) => {
 				return res.data;
 			});
 			return result;
 		} catch (error) {
-			console.error(error);
+			// console.error(error);
+			new Error('Failure Register');
 		}
 	},
 };

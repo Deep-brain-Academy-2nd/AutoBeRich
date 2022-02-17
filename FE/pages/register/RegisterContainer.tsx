@@ -9,9 +9,20 @@ type req = {
 	accessKey: string;
 	secretKey: string;
 };
-
+// React.FormEvent<HTMLFormElement>
+// interface tempType {React.FormEvent<HTMLFormElement>}
+interface tempType {
+	preventDefault: Function;
+	currentTarget: {
+		email: { value: string };
+		name: { value: string };
+		password: { value: string };
+		accessKey: { value: string };
+		secretKey: { value: string };
+	};
+}
 const RegisterContainer = () => {
-	const registerHandleSubmit: any = async (e: any) => {
+	const registerHandleSubmit = async (e: tempType) => {
 		try {
 			e.preventDefault();
 
@@ -46,7 +57,7 @@ const RegisterContainer = () => {
 
 			// const res: any = await API.post('users/signup', body);
 			const res = await registerAPI.register(body);
-			console.log(res);
+
 			if (res.code === 200) {
 				alert('가입에 성공하였습니다.');
 				Router.replace('/login');
@@ -58,9 +69,9 @@ const RegisterContainer = () => {
 				return;
 			}
 			// return result;
-		} catch (error) {
+		} catch (e) {
 			// 회원가입 에러처리
-			console.error(error);
+			new Error('Register Error');
 		}
 	};
 	return <RegisterPresenter handleSubmit={registerHandleSubmit} />;
