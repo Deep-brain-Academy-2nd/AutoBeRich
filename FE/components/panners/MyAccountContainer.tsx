@@ -1,35 +1,54 @@
 import React, { useEffect, useState } from 'react';
 
-import API from '../../apis';
-import MyAccount from './MyAccount';
+import tradingAPI from '../../apis/trading';
+import MyAccount, { userInfoTypes } from './MyAccount';
+
+export interface krwInfoType {
+	avg_buy_price: string;
+	avg_buy_price_modified: boolean;
+	balance: string;
+	currency: string;
+	locked: string;
+	unit_currency: string;
+}
 
 const MyAccountContainer = () => {
-  const [userInfo, setUserInfo] = useState('');
-  const [krwInfo, setKrwInfo] = useState('');
-  const [strategy, setStrategy] = useState('');
-  useEffect(() => {
-    getAccountInfos();
-  }, []);
-  const getAccountInfos = async () => {
-    try {
-      const email = localStorage.getItem('email');
-      const res = await API.get('/trading/getUserInfo', {
-        params: {
-          email,
-        },
-      });
-      if (res.data.code === 200) {
-        setUserInfo(res.data.coinInfo);
-        setKrwInfo(res.data.upbit_accounts);
-        setStrategy(res.data.strategy);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  return (
-    <MyAccount userInfo={userInfo} krwInfo={krwInfo} strategy={strategy} />
-  );
+	const [userInfo, setUserInfo] = useState<userInfoTypes>({
+		totalMoney: '',
+		coinList: {
+			name: '',
+			quantity: '',
+			earningRate: '',
+			entryPrice: '',
+			avgBuyPrice: '',
+			trade_price: '',
+			currentValuePrice: '',
+		},
+	});
+	const [krwInfo, setKrwInfo] = useState<krwInfoType[]>([]);
+	const [strategy, setStrategy] = useState('');
+	const [totalKRW, setTotalKRW] = useState(0);
+	useEffect(() => {
+		getAccountInfos();
+	}, []);
+	const getAccountInfos = async () => {
+		try {
+			const email = localStorage.getItem('email');
+			const res = await tradingAPI.getAccountInfos(email);
+			if (res.code === 200) {
+				setUserInfo(res.coinInfo);
+				setKrwInfo(res.upbit_accounts);
+				setStrategy(res.strategy);
+				setTotalKRW(parseInt(res.krwInfo[0].balance));
+			} else {
+				alert('정보를 가져오려면 로그인해주세요.');
+			}
+		} catch (error) {
+			// console.error(error);
+			new Error('Failure Get AccountInfo');
+		}
+	};
+	return <MyAccount userInfo={userInfo} krwInfo={krwInfo} strategy={strategy} totalKRW={totalKRW} />;
 };
 
 export default MyAccountContainer;

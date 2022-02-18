@@ -11,7 +11,7 @@ import axios from 'axios';
 import getConfig from 'next/config';
 import reducer from './reducers';
 
-axios.defaults.baseURL = getConfig().publicRuntimeConfig.apiServerUrl;
+// axios.defaults.baseURL = getConfig().publicRuntimeConfig.apiServerUrl; // about axios default setting
 
 const store = () =>
   // store를 생성함.
