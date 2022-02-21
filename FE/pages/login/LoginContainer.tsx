@@ -18,7 +18,6 @@ const LoginContainer = () => {
 				email,
 				password: e.currentTarget.password.value,
 			};
-
 			// const res: any = await API.post('users/login', body);
 			const res = await loginAPI.login(body);
 

@@ -39,6 +39,9 @@ const TopBar = () => {
 			<Link href="/">
 				<a>AutoBeRich</a>
 			</Link>
+			<Link href="/about">
+				<a>about</a>
+			</Link>
 			{name ? (
 				<>
 					{name}

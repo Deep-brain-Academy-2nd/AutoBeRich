@@ -54,7 +54,7 @@ const RegisterPresenter = ({ handleSubmit }: { handleSubmit: Function }) => {
 							<Typography component="h1" variant="h5">
 								Sign up
 							</Typography>
-							<Box component="form" onSubmit={() => handleSubmit} sx={{ mt: 3 }} noValidate>
+							<Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }} noValidate>
 								<Grid container spacing={2}>
 									<Grid item xs={12}>
 										<TextField

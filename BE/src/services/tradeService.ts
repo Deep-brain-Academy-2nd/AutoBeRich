@@ -34,7 +34,7 @@ const autoTradingStart = async (data: userUniqueSearchInput) => {
         autoTrading(decryptedAccessKey, decryptedSecretKey, user);
         timer();
       }
-    }, 7000);
+    }, 10000);
   }
   if (status) {
     timer();
@@ -46,7 +46,7 @@ const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: strin
   try {
     // ***** 테스트 위해서 여기 시간조정 getStartTime, getTime, addSeconds 등으로 가서 조절 :: dongwon
     const now = new Date(); // 현재시간
-    const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 8, 59, 50);
+    const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 8, 59, 51);
     const endTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0);
 
     //매도
@@ -64,7 +64,9 @@ const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: strin
       writeExcelSeet(decryptedAccessKey, decryptedSecretKey, user);
     } else {
       //매수
-      const targetPrice = await getTargetPrice('KRW-BTC', 0.5); // 매수 목표가 설정
+      const k = await getBestK('KRW-BTC');
+      console.log(' best K ========== ' + k);
+      const targetPrice = await getTargetPrice('KRW-BTC', k); // 매수 목표가 설정
       const currentPrice = await getCurrentPrice('KRW-BTC'); // 현재 가격
 
       console.log('KRW_BTC 목표가격 ========== ' + targetPrice);
@@ -312,8 +314,31 @@ const getRor = async (ticker: string, k: number) => {
   const quoationService = new QuoationService();
   const df = await quoationService.getDayCandles({
     marketCoin: ticker,
-    count: 7,
+    count: 21,
   });
+
+  let ror = 1;
+  for (let i = 1; i < 8; i++) {
+    const range = (df[i - 1].high_price - df[i - 1].low_price) * k; // 전일 고가, 저가
+    const targetPrice = df[i].opening_price + range;
+    ror = ror * (df[i].high_price > targetPrice ? df[i].prev_closing_price / targetPrice : 1);
+  }
+  return ror;
+};
+
+const getBestK = async (ticker: string) => {
+  let maxCrr = 0;
+  let bestK = 0.5;
+
+  for (let i = 0.1; i < 1.0; i = Math.round((i + 0.1) * 1e12) / 1e12) {
+    const crr = await getRor(ticker, i);
+    if (crr > maxCrr) {
+      maxCrr = crr;
+      bestK = i;
+    }
+  }
+
+  return bestK;
 };
 
 export default {
