@@ -3,18 +3,18 @@ import Router from 'next/router';
 import { useAppDispatch } from '../../store/hooks';
 import { getUserInfo } from '../../store/reducers/userInfo';
 import loginAPI from '../../apis/login';
-type req = {
+type reqType = {
 	email: string;
 	password: string;
 };
 
 const LoginContainer = () => {
 	const dispatch = useAppDispatch();
-	async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+	const loginSubmit: React.FormEventHandler<HTMLFormElement> = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		try {
 			const email = e.currentTarget.email.value;
-			const body: req = {
+			const body: reqType = {
 				email,
 				password: e.currentTarget.password.value,
 			};
@@ -41,8 +41,8 @@ const LoginContainer = () => {
 			// console.error(error);
 			new Error('Failure Login');
 		}
-	}
-	return <LoginPresenter handleSubmit={onSubmit} />;
+	};
+	return <LoginPresenter loginSubmit />;
 };
 
 export default LoginContainer;
