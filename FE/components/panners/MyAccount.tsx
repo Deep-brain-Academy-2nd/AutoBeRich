@@ -1,6 +1,6 @@
 import React from 'react';
 import Styled from 'styled-components';
-import { krwInfoType } from './MyAccountContainer';
+import { KrwInfoType } from './MyAccountContainer';
 
 const MyAccountWrap = Styled.div`
     width: 30%;
@@ -19,7 +19,7 @@ const MyAccountWrap = Styled.div`
 
 interface userAccountInfoTypes {
 	userInfo: userInfoTypes;
-	krwInfo: krwInfoType;
+	// krwInfo: KrwInfoType;
 	strategy: string;
 	totalKRW: number;
 }
@@ -37,7 +37,7 @@ export interface coinListTypes {
 	currentValuePrice: string;
 }
 
-const MyAccount = ({ userInfo, krwInfo, strategy, totalKRW }: userAccountInfoTypes) => {
+const MyAccount = ({ userInfo, strategy, totalKRW }: userAccountInfoTypes) => {
 	return (
 		<MyAccountWrap>
 			{userInfo ? (

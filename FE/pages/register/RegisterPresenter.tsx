@@ -22,7 +22,7 @@ const RegisterMain = styled.div`
 	flex-direction: column;
 	background-image: url('/images/background.png');
 `;
-const RegisterPresenter = ({ handleSubmit }: { handleSubmit: Function }) => {
+const RegisterPresenter: any = (handleSubmit: React.FormEventHandler<HTMLFormElement>) => {
 	const theme = createTheme({
 		typography: {
 			// In Chinese and Japanese the characters are usually larger,
@@ -54,7 +54,12 @@ const RegisterPresenter = ({ handleSubmit }: { handleSubmit: Function }) => {
 							<Typography component="h1" variant="h5">
 								Sign up
 							</Typography>
-							<Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }} noValidate>
+							<Box
+								component="form"
+								onSubmit={(e: React.FormEvent<HTMLFormElement>) => handleSubmit(e)}
+								sx={{ mt: 3 }}
+								noValidate
+							>
 								<Grid container spacing={2}>
 									<Grid item xs={12}>
 										<TextField
