@@ -36,10 +36,9 @@ const SelectStrategy = ({
 	changeTradingStatus: Function;
 }) => {
 	const [strategy, setStrategy] = useState('');
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		if (event.target.value !== 'Changing_Trading') {
+	const handleChange = () => {
+		if (strategy !== 'Changing_Trading') {
 			alert('현재는 변동성매매만 선택 가능합니다.');
-			return;
 		} else {
 			setStrategy('Changing_Trading');
 		}

@@ -23,7 +23,11 @@ const LoginMain = styled.div`
 	background-image: url('/images/background.png');
 `;
 
-function LoginPresenter({ handleSubmit }: { handleSubmit: Function }) {
+interface tempType {
+	temp: React.FormEventHandler<HTMLFormElement>;
+}
+
+const LoginPresenter: any = (loginSubmit: React.FormEventHandler<HTMLFormElement>) => {
 	const theme = createTheme({
 		typography: {
 			// In Chinese and Japanese the characters are usually larger,
@@ -51,7 +55,12 @@ function LoginPresenter({ handleSubmit }: { handleSubmit: Function }) {
 							<Typography component="h1" variant="h5">
 								Sign in
 							</Typography>
-							<Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+							<Box
+								component="form"
+								onSubmit={(e: React.FormEvent<HTMLFormElement>) => loginSubmit(e)}
+								noValidate
+								sx={{ mt: 1 }}
+							>
 								<TextField
 									id="email"
 									name="email"
@@ -100,6 +109,6 @@ function LoginPresenter({ handleSubmit }: { handleSubmit: Function }) {
 			</LoginMain>
 		</>
 	);
-}
+};
 
 export default LoginPresenter;
