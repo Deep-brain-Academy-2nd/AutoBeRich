@@ -4,6 +4,10 @@ Website[http://autoberichclient.s3-website-us-east-1.amazonaws.com/]
 
 ![main-image](./images/main-image.png)
 
+## Infra Architecture
+
+![setting-image](./images/Setting-image/Setting-image.001.jpeg)
+
 ## 개발 기간
 
 22.1.11 ~ 22.1.25
