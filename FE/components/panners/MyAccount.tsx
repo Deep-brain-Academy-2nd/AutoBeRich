@@ -19,7 +19,6 @@ const MyAccountWrap = Styled.div`
 
 interface userAccountInfoTypes {
 	userInfo: userInfoTypes;
-	// krwInfo: KrwInfoType;
 	strategy: string;
 	totalKRW: number;
 }
