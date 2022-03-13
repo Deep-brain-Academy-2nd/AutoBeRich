@@ -65,7 +65,7 @@ const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: strin
     } else {
       //매수
       const k = await getBestK('KRW-BTC');
-      console.log(' best K ========== ' + k);
+      console.log(' Best K ========== ' + k);
       const targetPrice = await getTargetPrice('KRW-BTC', k); // 매수 목표가 설정
       const currentPrice = await getCurrentPrice('KRW-BTC'); // 현재 가격
 
@@ -314,11 +314,11 @@ const getRor = async (ticker: string, k: number) => {
   const quoationService = new QuoationService();
   const df = await quoationService.getDayCandles({
     marketCoin: ticker,
-    count: 21,
+    count: 7,
   });
 
   let ror = 1;
-  for (let i = 1; i < 8; i++) {
+  for (let i = 1; i < 7; i++) {
     const range = (df[i - 1].high_price - df[i - 1].low_price) * k; // 전일 고가, 저가
     const targetPrice = df[i].opening_price + range;
     ror = ror * (df[i].high_price > targetPrice ? df[i].prev_closing_price / targetPrice : 1);
@@ -332,6 +332,7 @@ const getBestK = async (ticker: string) => {
 
   for (let i = 0.1; i < 1.0; i = Math.round((i + 0.1) * 1e12) / 1e12) {
     const crr = await getRor(ticker, i);
+    console.log(' k = ' + i + ' crr ========== ' + crr);
     if (crr > maxCrr) {
       maxCrr = crr;
       bestK = i;
