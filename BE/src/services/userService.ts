@@ -40,7 +40,14 @@ const insertRefreshToken = async (data: IRefreshToken) => {
 };
 
 const checkRefreshToken = async (data: IRefreshToken) => {
-  const result = await RefreshToken.findOne({ data });
+  const { email, refreshToken } = data;
+
+  const result = await RefreshToken.findOne({ email, refreshToken });
+  return result;
+};
+
+const deleteRefreshToken = async (data: IRefreshToken) => {
+  const result = await RefreshToken.deleteOne({ data });
   return result;
 };
 
@@ -51,4 +58,5 @@ export default {
   updateStatusAutoTrading,
   insertRefreshToken,
   checkRefreshToken,
+  deleteRefreshToken,
 };

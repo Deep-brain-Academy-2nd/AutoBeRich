@@ -9,6 +9,7 @@ import properties from '../config/properties/properties';
 import { IUser, IUserInputDTO } from '../interfaces/IUser';
 import { TradeService, UserService } from '../services';
 import User from "../models/User";
+import {IRefreshToken} from "../interfaces/IRefreshToken";
 
 const signUp = async (req: Request, res: Response, next: NextFunction) => {
   const { name, email, password, secretKey, accessKey }: IUserInputDTO = req.body;
@@ -139,10 +140,10 @@ const checkTokens = async (req: Request, res: Response, next: NextFunction) => {
   const access_token = req.headers['x-access-token'];
   if (access_token === undefined) throw Error('API 사용 권한이 없습니다.');
   const accessToken = verifyToken(access_token);
-  const refreshTokenTmp = await UserService.checkRefreshToken({
+  const refreshTokenTmp: IRefreshToken | null = await UserService.checkRefreshToken({
     email: email,
     refreshToken: refreshToken,
-  }); // *실제로는 DB 조회
+  });
   if (accessToken === null) {
     if (refreshTokenTmp === undefined) {
       // case1: access token과 refresh token 모두가 만료된 경우
@@ -152,19 +153,26 @@ const checkTokens = async (req: Request, res: Response, next: NextFunction) => {
       /**
        * DB를 조회해서 payload에 담을 값들을 가져오는 로직
        */
+      const refreshTokenVerify = verifyToken(refreshTokenTmp?.refreshToken || '');
+      if (refreshTokenVerify == null) {
+        return res.status(200).json({
+          status: 'success',
+          code: 206,
+          msg: 'refreshToken expired',
+        });
+      }
       const newAccessToken = jwt.sign({}, properties.jwtSecret, { expiresIn: '1h' });
       return res.status(200).json({
         status: 'success',
         code: 201,
         accessToken: newAccessToken,
-        msg: 'not logged in',
+        msg: 'new access token sign up',
       });
     }
   } else {
     if (refreshTokenTmp === undefined) {
       // case3: access token은 유효하지만, refresh token은 만료된 경우
       const newRefreshToken = jwt.sign({}, properties.jwtSecret, { expiresIn: '60d' });
-      /** * DB에 새로 발급된 refresh token 삽입하는 로직 (login과 유사) */
 
       await UserService.insertRefreshToken({
         email: email,
@@ -172,7 +180,11 @@ const checkTokens = async (req: Request, res: Response, next: NextFunction) => {
         date: new Date(),
       });
 
-      next();
+      return res.status(200).json({
+        status: 'success',
+        code: 200,
+        msg: 'new refresh token sign up',
+      });
     } else {
       // case4: accesss token과 refresh token 모두가 유효한 경우
       return res.status(200).json({
@@ -317,6 +329,12 @@ const updateStatusAutoTraiding = async (req: Request, res: Response, next: NextF
   }
 };
 
+const logOut = async (req: Request, res: Response, next: NextFunction) => {
+  const { email, refreshToken } = req.body;
+
+  await UserService.deleteRefreshToken({ email, refreshToken });
+};
+
 export default {
   signUp,
   logIn,
@@ -324,4 +342,5 @@ export default {
   updateTradingStrategy,
   updateStatusAutoTraiding,
   checkTokens,
+  logOut,
 };
