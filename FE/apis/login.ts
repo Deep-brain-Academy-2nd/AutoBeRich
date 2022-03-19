@@ -34,7 +34,6 @@ const loginAPI = {
 			},
 		}).then((res: any) => {
 			try {
-				console.log(res.data);
 				if (res.data.accessToken) {
 					localStorage.setItem('accessToken', res.data.accessToken);
 				}
