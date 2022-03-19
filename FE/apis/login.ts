@@ -21,7 +21,7 @@ const loginAPI = {
 		}
 	},
 	checkAccessToken: async () => {
-		const accessToken = localStorage.getItem('accessToken'),
+		const accessToken: any = localStorage.getItem('accessToken'),
 			email = localStorage.getItem('email'),
 			refreshToken = localStorage.getItem('refreshToken');
 		// const expiredTime: any = localStorage.getItem('expiredTime');
