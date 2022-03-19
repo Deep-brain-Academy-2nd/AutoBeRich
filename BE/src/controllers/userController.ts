@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import properties from '../config/properties/properties';
 import { IUser, IUserInputDTO } from '../interfaces/IUser';
 import { TradeService, UserService } from '../services';
+import User from "../models/User";
 
 const signUp = async (req: Request, res: Response, next: NextFunction) => {
   const { name, email, password, secretKey, accessKey }: IUserInputDTO = req.body;
@@ -83,38 +84,107 @@ const logIn = async (req: Request, res: Response, next: NextFunction) => {
       return;
     }
 
+    const accessToken = jwt.sign({}, properties.jwtSecret, { expiresIn: '1h' });
     //유저 정보를 가지고 토큰을 만들어낸다.
-    jwt.sign(
-      {
-        email: email,
-      },
-      properties.jwtSecret,
-      { expiresIn: 36000 },
-      (err, token) => {
-        if (err) throw err;
-        // @ts-ignore
+    const refreshToken = jwt.sign({}, properties.jwtSecret, { expiresIn: '60d' });
 
-        // @ts-ignore
-        res.status(200).json({
-          status: 'success',
-          code: 200,
-          msg: 'Login successful.',
-          token: token,
-          email: user.email,
-          name: user.name,
-        });
-      }
-    );
+    await UserService.insertRefreshToken({
+      email: email,
+      refreshToken: refreshToken,
+      date: new Date(),
+    });
 
-    //복호화
-    //const bytes = CryptoJS.AES.decrypt(user.secretKey, key);
-    //const decryptedSecretKey = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    const date = new Date();
+    date.setMonth(date.getHours() + 1);
+    res.status(200).json({
+      status: 'success',
+      code: 200,
+      msg: 'Login successful.',
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+      expiredTime: date.getTime(), // 한시간
+      email: user.email,
+      name: user.name,
+    });
+
+    return;
   } catch (err) {
     next(err);
   }
 };
 
-const verifyToken = (req: Request, res: Response, next: NextFunction) => {
+const verifyToken = (token: string | string[]) => {
+  try {
+    // @ts-ignore
+    return jwt.verify(token, properties.jwtSecret);
+  } catch (e) {
+    return null;
+  }
+};
+
+const checkTokens = async (req: Request, res: Response, next: NextFunction) => {
+  /**
+   * access token 자체가 없는 경우엔 에러(401)를 반환
+   *  클라이언트측에선 401을 응답받으면 로그인 페이지로 이동시킴
+   **/
+  const { email, refreshToken } = req.body;
+
+  if (!req.headers['x-access-token']) {
+    return res.status(403).json({
+      status: 'failure',
+      code: 403,
+      msg: 'not logged in',
+    });
+  }
+  const access_token = req.headers['x-access-token'];
+  if (access_token === undefined) throw Error('API 사용 권한이 없습니다.');
+  const accessToken = verifyToken(access_token);
+  const refreshTokenTmp = await UserService.checkRefreshToken({
+    email: email,
+    refreshToken: refreshToken,
+  }); // *실제로는 DB 조회
+  if (accessToken === null) {
+    if (refreshTokenTmp === undefined) {
+      // case1: access token과 refresh token 모두가 만료된 경우
+      throw Error('API 사용 권한이 없습니다.');
+    } else {
+      // case2: access token은 만료됐지만, refresh token은 유효한 경우
+      /**
+       * DB를 조회해서 payload에 담을 값들을 가져오는 로직
+       */
+      const newAccessToken = jwt.sign({}, properties.jwtSecret, { expiresIn: '1h' });
+      return res.status(200).json({
+        status: 'success',
+        code: 201,
+        accessToken: newAccessToken,
+        msg: 'not logged in',
+      });
+    }
+  } else {
+    if (refreshTokenTmp === undefined) {
+      // case3: access token은 유효하지만, refresh token은 만료된 경우
+      const newRefreshToken = jwt.sign({}, properties.jwtSecret, { expiresIn: '60d' });
+      /** * DB에 새로 발급된 refresh token 삽입하는 로직 (login과 유사) */
+
+      await UserService.insertRefreshToken({
+        email: email,
+        refreshToken: newRefreshToken,
+        date: new Date(),
+      });
+
+      next();
+    } else {
+      // case4: accesss token과 refresh token 모두가 유효한 경우
+      return res.status(200).json({
+        status: 'success',
+        code: 200,
+        msg: 'verify token success',
+      });
+    }
+  }
+};
+
+/*const verifyToken = (req: Request, res: Response, next: NextFunction) => {
   try {
     if (!req.headers['x-access-token']) {
       return res.status(403).json({
@@ -140,10 +210,10 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     const decoded: any = jwt.verify(token, secret_key);
 
     if (decoded) {
-      /*res.locals = {
+      /!*res.locals = {
         ...res.locals,
         email: decoded.email,
-      };*/
+      };*!/
       next();
     } else {
       res.status(401).json({
@@ -155,7 +225,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
   } catch (err) {
     next(err);
   }
-};
+};*/
 
 const accountInfo = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -226,27 +296,7 @@ const updateTradingStrategy = async (req: Request, res: Response, next: NextFunc
     next(err);
   }
 };
-/*
-const updateStatusAutoTrading = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { email, status } = req.body;
 
-    // 자동 매매 상태 변경
-    await UserService.updateStatusAutoTrading({ email, status });
-
-    // // 자동 매매 시작
-    // startAutoTrading(email);
-
-    res.status(200).json({
-      status: 'success',
-      code: 200,
-      msg: 'Update traiding status successful.',
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-*/
 const updateStatusAutoTraiding = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, status } = req.body;
@@ -270,8 +320,8 @@ const updateStatusAutoTraiding = async (req: Request, res: Response, next: NextF
 export default {
   signUp,
   logIn,
-  verifyToken,
   accountInfo,
   updateTradingStrategy,
   updateStatusAutoTraiding,
+  checkTokens,
 };
