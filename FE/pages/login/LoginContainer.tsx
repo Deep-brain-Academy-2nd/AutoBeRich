@@ -42,7 +42,7 @@ const LoginContainer = () => {
 			new Error('Failure Login');
 		}
 	};
-	return <LoginPresenter loginSubmit />;
+	return <LoginPresenter loginSubmit={loginSubmit} />;
 };
 
 export default LoginContainer;
