@@ -8,8 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 import properties from '../config/properties/properties';
 import { IUser, IUserInputDTO } from '../interfaces/IUser';
 import { TradeService, UserService } from '../services';
-import User from "../models/User";
-import {IRefreshToken} from "../interfaces/IRefreshToken";
+import User from '../models/User';
+import { IRefreshToken } from '../interfaces/IRefreshToken';
 
 const signUp = async (req: Request, res: Response, next: NextFunction) => {
   const { name, email, password, secretKey, accessKey }: IUserInputDTO = req.body;
@@ -330,9 +330,9 @@ const updateStatusAutoTraiding = async (req: Request, res: Response, next: NextF
 };
 
 const logOut = async (req: Request, res: Response, next: NextFunction) => {
-  const { email, refreshToken } = req.body;
+  const { refreshToken } = req.body;
 
-  await UserService.deleteRefreshToken({ email, refreshToken });
+  await UserService.deleteRefreshToken({ refreshToken });
 };
 
 export default {

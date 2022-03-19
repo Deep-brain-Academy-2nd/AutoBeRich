@@ -38,6 +38,9 @@ const loginAPI = {
 				if (res.data.accessToken) {
 					localStorage.setItem('accessToken', res.data.accessToken);
 				}
+				if (res.data.code === 206) {
+					loginAPI.logout();
+				}
 			} catch (error) {
 				// Login 페이지로 리디렉션
 				new Error('Retry Login plz');
@@ -51,10 +54,14 @@ const loginAPI = {
 		// });
 	},
 	logout: async () => {
-		const email = localStorage.getItem('email'),
-			refreshToken = localStorage.getItem('refreshToken');
-		const req = { email, refreshToken };
+		const refreshToken = localStorage.getItem('refreshToken');
+		const req = { refreshToken };
 		await API.post('users/logout', req);
+		localStorage.removeItem('name');
+		localStorage.removeItem('email');
+		localStorage.removeItem('accessToken');
+		localStorage.removeItem('refreshToken');
+		localStorage.removeItem('expiredTime');
 	},
 
 	// onLogin: ({ email, password }: Data) => {

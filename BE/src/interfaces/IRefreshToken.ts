@@ -1,5 +1,5 @@
 export interface IRefreshToken {
-  email: string;
+  email?: string;
   refreshToken: string;
   date?: Date;
 }
