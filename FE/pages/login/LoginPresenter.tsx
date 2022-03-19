@@ -27,7 +27,7 @@ interface tempType {
 	temp: React.FormEventHandler<HTMLFormElement>;
 }
 
-const LoginPresenter: any = ({ loginSubmit }) => {
+const LoginPresenter: any = ({ loginSubmit }: { loginSubmit: any }) => {
 	const theme = createTheme({
 		typography: {
 			// In Chinese and Japanese the characters are usually larger,

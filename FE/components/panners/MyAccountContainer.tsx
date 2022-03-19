@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import tradingAPI from '../../apis/trading';
 import MyAccount, { userInfoTypes } from './MyAccount';
+import loginAPI from '../../apis/login';
 
 export interface KrwInfoType {
 	avg_buy_price: string;
@@ -27,9 +28,29 @@ const MyAccountContainer = () => {
 	});
 	const [strategy, setStrategy] = useState('');
 	const [totalKRW, setTotalKRW] = useState(0);
+
+	// token 확인
+	const checkAccessToken = async () => {
+		await loginAPI.checkAccessToken();
+	};
+
 	useEffect(() => {
-		getAccountInfos();
+		getAccountInfos(); // 코인 정보
+		checkAccessToken(); // jwt 관련 토큰
+		// 토큰 검증 성공시 로그인 유지
+		const accessToken = localStorage.getItem('accessToken');
+		if (!accessToken) {
+			onLogout();
+		}
+		// 토큰 검증 만료시 로그인 풀려야 됨.
 	}, []);
+	const onLogout = () => {
+		localStorage.removeItem('email');
+		localStorage.removeItem('name');
+		localStorage.removeItem('accessToken');
+		localStorage.removeItem('refreshToken');
+		localStorage.removeItem('expiredTime');
+	};
 	const getAccountInfos = async () => {
 		try {
 			const email = localStorage.getItem('email');

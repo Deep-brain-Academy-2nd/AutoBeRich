@@ -4,6 +4,7 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import { useAppSelector } from '../store/hooks';
 import { selectInfo } from '../store/reducers/userInfo';
+import loginAPI from '../apis/login';
 
 const NavBar = styled.nav`
 	display: flex;
@@ -21,17 +22,21 @@ const NavBar = styled.nav`
 const TopBar = () => {
 	// const info: any = useAppSelector(selectInfo);
 	const [name, setName] = useState('');
+
 	useEffect(() => {
 		const localStorageName = localStorage.getItem('name');
 		if (localStorageName) {
 			setName(localStorageName);
 		}
 	}, [name]);
-	const onLogout = () => {
+
+	const onLogout = async () => {
 		localStorage.removeItem('email');
 		localStorage.removeItem('name');
-		localStorage.removeItem('token');
+		// localStorage.removeItem('accessToken');
 		setName('');
+		// refreshToken 을 지우기 위한 api 호출
+		await loginAPI.logout();
 	};
 
 	return (
