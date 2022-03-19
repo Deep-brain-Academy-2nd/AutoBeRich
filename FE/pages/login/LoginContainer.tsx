@@ -22,13 +22,20 @@ const LoginContainer = () => {
 			const res = await loginAPI.login(body);
 
 			if (res.code === 200) {
-				const token = res.token,
+				const accessToken = res.accessToken,
+					refreshToken = res.refreshToken,
+					expiredTime = res.expiredTime,
 					name = res.name;
 
 				localStorage.setItem('email', email);
-				localStorage.setItem('token', token);
+				localStorage.setItem('refreshToken', refreshToken);
+				localStorage.setItem('expiredTime', expiredTime);
+				localStorage.setItem('accessToken', accessToken);
 				localStorage.setItem('name', name);
-				dispatch(getUserInfo({ name, email, token }));
+				// // accessToken 헤더에 설정.
+				// loginAPI.setToken(accessToken);
+
+				dispatch(getUserInfo({ name, email, accessToken }));
 				Router.replace('/');
 			} else {
 				alert('login 실패');
@@ -42,7 +49,7 @@ const LoginContainer = () => {
 			new Error('Failure Login');
 		}
 	};
-	return <LoginPresenter loginSubmit />;
+	return <LoginPresenter loginSubmit={loginSubmit} />;
 };
 
 export default LoginContainer;

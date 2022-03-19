@@ -1,5 +1,7 @@
 import { IUserInputDTO, userUniqueSearchInput } from '../interfaces/IUser';
 import User from '../models/User';
+import RefreshToken from '../models/RefreshToken';
+import { IRefreshToken } from '../interfaces/IRefreshToken';
 
 const createUser = (data: IUserInputDTO) => {
   const user = new User(data);
@@ -32,9 +34,29 @@ const updateStatusAutoTrading = async (data: userUniqueSearchInput) => {
   }
 };
 
+const insertRefreshToken = async (data: IRefreshToken) => {
+  const refresh = new RefreshToken(data);
+  return refresh.save();
+};
+
+const checkRefreshToken = async (data: IRefreshToken) => {
+  const { email, refreshToken } = data;
+
+  const result = await RefreshToken.findOne({ email, refreshToken });
+  return result;
+};
+
+const deleteRefreshToken = async (data: IRefreshToken) => {
+  const result = await RefreshToken.deleteOne({ data });
+  return result;
+};
+
 export default {
   createUser,
   findEmail,
   updateTradingStrategy,
   updateStatusAutoTrading,
+  insertRefreshToken,
+  checkRefreshToken,
+  deleteRefreshToken,
 };

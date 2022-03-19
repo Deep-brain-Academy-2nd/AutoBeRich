@@ -27,7 +27,7 @@ interface tempType {
 	temp: React.FormEventHandler<HTMLFormElement>;
 }
 
-const LoginPresenter: any = (loginSubmit: React.FormEventHandler<HTMLFormElement>) => {
+const LoginPresenter: any = ({ loginSubmit }: { loginSubmit: any }) => {
 	const theme = createTheme({
 		typography: {
 			// In Chinese and Japanese the characters are usually larger,
@@ -55,12 +55,7 @@ const LoginPresenter: any = (loginSubmit: React.FormEventHandler<HTMLFormElement
 							<Typography component="h1" variant="h5">
 								Sign in
 							</Typography>
-							<Box
-								component="form"
-								onSubmit={(e: React.FormEvent<HTMLFormElement>) => loginSubmit(e)}
-								noValidate
-								sx={{ mt: 1 }}
-							>
+							<Box component="form" onSubmit={loginSubmit} noValidate sx={{ mt: 1 }}>
 								<TextField
 									id="email"
 									name="email"

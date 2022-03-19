@@ -14,7 +14,8 @@ router.post(
   UserController.signUp
 );
 router.use('/login', UserController.logIn);
-router.use('/verify', UserController.verifyToken);
+router.use('/verify', UserController.checkTokens);
 router.get('/account/info', UserController.accountInfo);
+router.use('/logout', UserController.logOut);
 
 export default router;
