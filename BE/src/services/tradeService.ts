@@ -49,7 +49,7 @@ const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: strin
     const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 8, 59, 51);
     const endTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0);
 
-    //매도
+    // 매도
     if (startTime <= now && now <= endTime) {
       const balances = await getBalance(decryptedAccessKey, decryptedSecretKey);
       const btc = balances.find((item: IAccount) => {
@@ -57,13 +57,22 @@ const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: strin
       });
       // 5천원이상이면 매도. 현재 비트코인 가격상 0.00008이 5천원임. :: 2022-01-24 dongwon
       if (btc.balance > 0.00008) {
-        console.log(user?.name + ' 매도 시작 ==========  ' + new Date());
-        await sellMarketOrder('KRW-BTC', btc.balance * 0.9995, decryptedAccessKey, decryptedSecretKey);
+        const k = await getBestK('KRW-BTC');
+        console.log(' Best K ========== ' + k);
+        const targetPrice = await getTargetPrice('KRW-BTC', k); // 매수 목표가 설정
+        const currentPrice = await getCurrentPrice('KRW-BTC'); // 현재 가격
+        if (targetPrice > currentPrice) {
+          console.log(user?.name + ' 매도 시작 ==========  ' + new Date());
+          await sellMarketOrder('KRW-BTC', btc.balance * 0.9995, decryptedAccessKey, decryptedSecretKey);
+        } else {
+          console.log('현재가격이 목표가격보다 크므로 바로 매수를 들어가므로 매도 pass');
+        }
       }
       //여기에 구글 시트 추가
       writeExcelSeet(decryptedAccessKey, decryptedSecretKey, user);
-    } else {
-      //매수
+    }
+    // 매수
+    else {
       const k = await getBestK('KRW-BTC');
       console.log(' Best K ========== ' + k);
       const targetPrice = await getTargetPrice('KRW-BTC', k); // 매수 목표가 설정
@@ -316,7 +325,6 @@ const getRor = async (ticker: string, k: number) => {
     marketCoin: ticker,
     count: 7,
   });
-
   let ror = 1;
   for (let i = 1; i < 7; i++) {
     const range = (df[i - 1].high_price - df[i - 1].low_price) * k; // 전일 고가, 저가
@@ -332,7 +340,7 @@ const getBestK = async (ticker: string) => {
 
   for (let i = 0.1; i < 1.0; i = Math.round((i + 0.1) * 1e12) / 1e12) {
     const crr = await getRor(ticker, i);
-    console.log(' k = ' + i + ' crr ========== ' + crr);
+    // console.log(' k = ' + i + ' crr ========== ' + crr);
     if (crr > maxCrr) {
       maxCrr = crr;
       bestK = i;
