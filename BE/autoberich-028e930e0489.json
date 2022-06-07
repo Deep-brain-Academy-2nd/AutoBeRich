@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "autoberich",
+  "private_key_id": "028e930e0489649f526c153f4eb7123adb130eb1",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDA30EXWhFUbFD+\nDpIR+O6+cdJa25rOUDh6UJaJ1FxpHibqmqit/NCUx2Eqd/MzvqVSqvoCGMNVJuN+\noqZt69ue8f6VRgxc6hiM3vWnh/13wbkwbqGREsCwesOAkZgFiDRCx2meKmQPbAQu\nOxlllYYhgd9mjlmXNmF2sDWPs310sACGYJ/VXC5el/0Dq7By4bqgY+KVAKcf3lE9\nlamC5ecbRqhwJT/7Nfk20Re5l3IbfY05xES+DlI57jQ4Vy2BlIMs58gZCKbzCx3V\n0X7+848ZC1j9/X+UBMYr/BRmg2DpqMLk6XSj6rrgnSQCCiArHZDlXg5Itw1tuqne\n0051r+yRAgMBAAECggEAOMSdWnuylRgqgJSWTr7nulszEHYJqwb2kJ3OqTO9nVz4\nFF5AHrHGTLwgb8kNZqIK8/mKC3rxZ0tCc1/5P2pH4pEUnygWdHSclD39rPk8U/bL\nhKNTX6lW2LrRdzKjPaGYzDz4a8rLV7SxyE+xynIHoC4jLILigLzLVA1KPokUeHbf\nKZEAJoNOxtKO4ehGodr4jv1dX/DSOl+HK8naI630PJkuqdzgbbj5Tjo1Fd/WQL2A\nFrPV3u/uA60oHB59PDrtzbhCqo/c4BXS947M/3mWbs2u0kUSR9OYOr6QMroASP1C\n4lVDdDeqCxI4K0RBRSN84azbmBmq07vlI8NCwT0E7wKBgQD/LCr5bMNord42lLQK\nAESklYeO7g3KDHXw8THj/HeMA1B/3pC2Xm/XiyS+5i9DjOVccRjqpB7ODx36C9/I\nyzJNaCRsrBNL+vPaKmuon0Fzi562tw4L2+Qo0UDow9wQ/dRDfY5dvtF/nQYxOYD1\nrpP8C2ciNHvXlGKGshp0e1YiYwKBgQDBf14V16BdxeOk1lLPtq5+Jqbxr0s5B/9b\nwxHNIsmjWyZB5z886k6ihUdY0W43/EDXC8+K0up+YST+tQxjMlLeJf0yGcJamtYU\nsKm7xi1IBs29VORIjh5DzqxmauCodkHsME95HFU1XJpWBw8HNKfd3m8QshC+G8WM\nj7O3FlYtewKBgQC2iMDhFgWe/ylDgBJeSRzRY0nKW84vZ8SCq/cVcMePt9tA7VQ1\nsM5usNGDYaQTvVlhTGIXj3mdy8CU2yOlPn3oU4Qi3OEc7BK+ULQctneakRji+YWp\nxA2tiSrWlyz4Vqsd8FYEB3lTwV7pnYn7tXuUxA9tr3+bkkD8u7Ei/At8owKBgFex\nJm2VtErrNRjuPMeADiKD1+LuQ5QMKNFoXXfvTRyoYXU6nPE5avvClSwOdfoPaz9K\nTfunTLiLxB1e5cdK9j1RUCdVfzxasazcx3+e98SNuM4WXAL5zYODdaRQyZHvTj8B\nQfMsQP2XAyb7ufbVCULG3OTfHjFaGrRyJ8tQ5ytjAoGAE8CmOWTWTyTWMWQwCtd6\nDuhme/rai2jedmZF8xCmC/OB3GhTL0tnTbtzx0cKJ7WC7vUjvOJwga6DXDRc8zLK\n6hWWVUT0RYS//wemGQbQ93aWH95Ts6pS8WZiFrEb3+MQhkeDA7ZiEDsOxOqRr1H0\n+jeb5vIlJrPe4Wrg5U+ocbU=\n-----END PRIVATE KEY-----\n",
+  "client_email": "autoberich@autoberich.iam.gserviceaccount.com",
+  "client_id": "109980358516954501108",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/autoberich%40autoberich.iam.gserviceaccount.com"
+}

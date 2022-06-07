@@ -1,5 +1,7 @@
+import axios from 'axios';
 import crypto from 'crypto';
 import CryptoJS from 'crypto-js';
+import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { sign } from 'jsonwebtoken';
 import { QuoationService } from 'node-upbit';
 import { encode as queryEncode } from 'querystring';
@@ -9,8 +11,6 @@ import properties from '../config/properties/properties';
 import { IAccount } from '../interfaces/IAccount';
 import { IUser, userUniqueSearchInput } from '../interfaces/IUser';
 import UserService from './userService';
-import axios from 'axios';
-import { GoogleSpreadsheet } from 'google-spreadsheet';
 
 const autoTradingStart = async (data: userUniqueSearchInput) => {
   // 로그인하고 코인 구매가 가능한 정보 가져오기 :: 2022-01-14 dongwon
@@ -46,8 +46,8 @@ const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: strin
   try {
     // ***** 테스트 위해서 여기 시간조정 getStartTime, getTime, addSeconds 등으로 가서 조절 :: dongwon
     const now = new Date(); // 현재시간
-    const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 8, 59, 51);
-    const endTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0);
+    const startTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 0);
+    const endTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 9, 0, 10);
 
     // 매도
     if (startTime <= now && now <= endTime) {
@@ -57,7 +57,8 @@ const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: strin
       });
       // 5천원이상이면 매도. 현재 비트코인 가격상 0.00008이 5천원임. :: 2022-01-24 dongwon
       if (btc.balance > 0.00008) {
-        const k = await getBestK('KRW-BTC');
+        // const k = await getBestK('KRW-BTC');
+        const k = 0.5
         console.log(' Best K ========== ' + k);
         const targetPrice = await getTargetPrice('KRW-BTC', k); // 매수 목표가 설정
         const currentPrice = await getCurrentPrice('KRW-BTC'); // 현재 가격
@@ -73,7 +74,8 @@ const autoTrading = async (decryptedAccessKey: string, decryptedSecretKey: strin
     }
     // 매수
     else {
-      const k = await getBestK('KRW-BTC');
+      //const k = await getBestK('KRW-BTC');
+      const k = 0.5
       console.log(' Best K ========== ' + k);
       const targetPrice = await getTargetPrice('KRW-BTC', k); // 매수 목표가 설정
       const currentPrice = await getCurrentPrice('KRW-BTC'); // 현재 가격
@@ -111,8 +113,9 @@ const getTargetPrice = async (ticker: string, k: number) => {
     marketCoin: ticker,
     count: 2,
   });
+  console.log(df, df[1].opening_price, df[0].high_price, df[0].low_price)
   // 이전 종가보다 현재 낙폭이 *k배가 목표 가격.
-  const targetPrice = df[0].prev_closing_price + (df[0].high_price - df[0].low_price) * k;
+  const targetPrice = df[1].opening_price + (df[0].high_price - df[0].low_price) * k;
   return targetPrice;
 };
 
@@ -323,10 +326,10 @@ const getRor = async (ticker: string, k: number) => {
   const quoationService = new QuoationService();
   const df = await quoationService.getDayCandles({
     marketCoin: ticker,
-    count: 7,
+    count: 2,
   });
   let ror = 1;
-  for (let i = 1; i < 7; i++) {
+  for (let i = 1; i < 2; i++) {
     const range = (df[i - 1].high_price - df[i - 1].low_price) * k; // 전일 고가, 저가
     const targetPrice = df[i].opening_price + range;
     ror = ror * (df[i].high_price > targetPrice ? df[i].prev_closing_price / targetPrice : 1);
